@@ -1,0 +1,20 @@
+--- Packages/FindOGRE.cmake 2014-01-21 19:26:56.000000000 -0300
++++ Packages/FindOGRE.cmake 2014-01-23 11:58:32.034415308 -0300
+@@ -264,7 +264,7 @@
+   find_package(OpenGLES2 QUIET)
+   find_package(ZLIB QUIET)
+   find_package(ZZip QUIET)
+-  if (UNIX AND NOT APPLE AND NOT ANDROID)
++  if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT EGLFS)
+     find_package(X11 QUIET)
+     find_library(XAW_LIBRARY NAMES Xaw Xaw7 PATHS ${DEP_LIB_SEARCH_DIR} ${X11_LIB_SEARCH_PATH})
+     if (NOT XAW_LIBRARY OR NOT X11_Xt_FOUND)
+@@ -287,7 +287,7 @@
+   if (NOT FREETYPE_FOUND)
+     set(OGRE_DEPS_FOUND FALSE)
+   endif ()
+-  if (UNIX AND NOT APPLE AND NOT ANDROID)
++  if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT EGLFS)
+   if (NOT X11_FOUND)
+       set(OGRE_DEPS_FOUND FALSE)
+       endif ()

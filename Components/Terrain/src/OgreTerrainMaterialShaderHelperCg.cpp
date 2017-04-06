@@ -325,8 +325,7 @@ namespace Ogre
 			outStream << 
 				"uniform sampler2D globalNormal : register(s" << currentSamplerIdx++ << ")\n";
 
-
-			if (terrain->getGlobalColourMapEnabled() && prof->isGlobalColourMapEnabled())
+ 			if (terrain->getGlobalColourMapEnabled() && prof->isGlobalColourMapEnabled())
 			{
 				outStream << ", uniform sampler2D globalColourMap : register(s" 
 					<< currentSamplerIdx++ << ")\n";
@@ -452,7 +451,6 @@ namespace Ogre
 
 			}
 		}
-
 
 	}
 	//---------------------------------------------------------------------

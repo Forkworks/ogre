@@ -1,0 +1,202 @@
+diff -rupN -xOgreGLES2UniformCacheImp.cpp -xOgreGLES2PixelFormat.cpp -xOgreGLES2Prerequisites.h -xOgreEGLRenderTexture.cpp OgreLocal/ogre/RenderSystems/GLES2/include/EGL/OgreEGLSupport.h Ogre3D/ogre/RenderSystems/GLES2/include/EGL/OgreEGLSupport.h
+--- OgreLocal/ogre/RenderSystems/GLES2/include/EGL/OgreEGLSupport.h	2013-05-03 16:25:27.339536466 -0300
++++ Ogre3D/ogre/RenderSystems/GLES2/include/EGL/OgreEGLSupport.h	2013-05-13 11:38:13.265740437 -0300
+@@ -75,6 +75,7 @@ namespace Ogre {
+             void setConfigOption(const String &name, const String &value);
+             virtual String getDisplayName (void);
+ 			EGLDisplay getGLDisplay(void);
++	    		EGLDisplay checkExistingGLDisplay(void);
+ 			void setGLDisplay(EGLDisplay val);
+ 			EGLConfig* chooseGLConfig(const EGLint *attribList, EGLint *nElements);
+ 			EGLConfig* getConfigs(EGLint *nElements);
+diff -rupN -xOgreGLES2UniformCacheImp.cpp -xOgreGLES2PixelFormat.cpp -xOgreGLES2Prerequisites.h -xOgreEGLRenderTexture.cpp OgreLocal/ogre/RenderSystems/GLES2/include/EGL/X11/OgreX11EGLSupport.h Ogre3D/ogre/RenderSystems/GLES2/include/EGL/X11/OgreX11EGLSupport.h
+--- OgreLocal/ogre/RenderSystems/GLES2/include/EGL/X11/OgreX11EGLSupport.h	2013-05-03 16:25:27.339536466 -0300
++++ Ogre3D/ogre/RenderSystems/GLES2/include/EGL/X11/OgreX11EGLSupport.h	2013-05-13 11:44:33.745747382 -0300
+@@ -165,6 +165,10 @@ namespace Ogre {
+ 			//Then it calls EGLSupport::getDLDisplay to do the rest of the work.
+ 			EGLDisplay getGLDisplay();
+ 
++			// Same as getGLDisplay but only returns current display without initializing it.
++			// Useful when someone other than Ogre controls the current EGLDisplay.
++			EGLDisplay checkExistingGLDisplay(void);
++
+ 			//Moved this here from EGLSupport because maybe it should be more native.
+ 	                RenderWindow* newWindow(const String& name,
+             	                        unsigned int width, unsigned int height,
+diff -rupN -xOgreGLES2UniformCacheImp.cpp -xOgreGLES2PixelFormat.cpp -xOgreGLES2Prerequisites.h -xOgreEGLRenderTexture.cpp OgreLocal/ogre/RenderSystems/GLES2/src/EGL/OgreEGLSupport.cpp Ogre3D/ogre/RenderSystems/GLES2/src/EGL/OgreEGLSupport.cpp
+--- OgreLocal/ogre/RenderSystems/GLES2/src/EGL/OgreEGLSupport.cpp	2013-05-03 16:25:27.355536466 -0300
++++ Ogre3D/ogre/RenderSystems/GLES2/src/EGL/OgreEGLSupport.cpp	2013-05-13 12:28:29.385795492 -0300
+@@ -39,7 +39,6 @@ THE SOFTWARE.
+ #include "OgreEGLWindow.h"
+ #include "OgreEGLRenderTexture.h"
+ 
+-
+ namespace Ogre {
+ 
+ 
+@@ -183,7 +182,6 @@ namespace Ogre {
+ 
+         mGLDisplay = eglGetDisplay(mNativeDisplay);
+         EGL_CHECK_ERROR
+-
+         if(mGLDisplay == EGL_NO_DISPLAY)
+         {
+             OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR,
+@@ -201,6 +199,12 @@ namespace Ogre {
+         return mGLDisplay;
+     }
+ 
++    EGLDisplay EGLSupport::checkExistingGLDisplay(void)
++    {
++	mGLDisplay = eglGetCurrentDisplay();
++        EGL_CHECK_ERROR
++	return mGLDisplay;
++    }
+ 
+     String EGLSupport::getDisplayName(void)
+     {
+@@ -306,6 +310,12 @@ namespace Ogre {
+                         __FUNCTION__);
+             return 0;
+         }
++	if (!glConfig) {
++		OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR,
++                        "Fail to get config from drawable",
++                        __FUNCTION__);
++        }	
++
+         EGL_CHECK_ERROR
+         eglQuerySurface(mGLDisplay, drawable, EGL_WIDTH, (EGLint *) w);
+         EGL_CHECK_ERROR
+diff -rupN -xOgreGLES2UniformCacheImp.cpp -xOgreGLES2PixelFormat.cpp -xOgreGLES2Prerequisites.h -xOgreEGLRenderTexture.cpp OgreLocal/ogre/RenderSystems/GLES2/src/EGL/OgreEGLWindow.cpp Ogre3D/ogre/RenderSystems/GLES2/src/EGL/OgreEGLWindow.cpp
+--- OgreLocal/ogre/RenderSystems/GLES2/src/EGL/OgreEGLWindow.cpp	2013-05-03 16:25:27.355536466 -0300
++++ Ogre3D/ogre/RenderSystems/GLES2/src/EGL/OgreEGLWindow.cpp	2013-05-02 20:06:46.928777822 -0300
+@@ -256,8 +256,10 @@ namespace Ogre {
+         ::EGLSurface surface;
+ 
+         surface = eglCreateWindowSurface(display, mEglConfig, (EGLNativeWindowType)win, NULL);
++std::cout << "@@ " << eglGetError();
+         EGL_CHECK_ERROR
+ 
++std::cout << "@@ " << eglGetError();
+         if (surface == EGL_NO_SURFACE)
+         {
+             OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR,
+diff -rupN -xOgreGLES2UniformCacheImp.cpp -xOgreGLES2PixelFormat.cpp -xOgreGLES2Prerequisites.h -xOgreEGLRenderTexture.cpp OgreLocal/ogre/RenderSystems/GLES2/src/EGL/X11/OgreX11EGLSupport.cpp Ogre3D/ogre/RenderSystems/GLES2/src/EGL/X11/OgreX11EGLSupport.cpp
+--- OgreLocal/ogre/RenderSystems/GLES2/src/EGL/X11/OgreX11EGLSupport.cpp	2013-05-03 16:25:27.355536466 -0300
++++ Ogre3D/ogre/RenderSystems/GLES2/src/EGL/X11/OgreX11EGLSupport.cpp	2013-05-13 12:00:11.049764491 -0300
+@@ -40,7 +40,6 @@ THE SOFTWARE.
+ #include "OgreX11EGLRenderTexture.h"
+ #include "OgreX11EGLContext.h"
+ 
+-
+ #if (OGRE_PLATFORM != OGRE_PLATFORM_LINUX)
+ 	void XStringListToTextProperty(char ** prop, int num, XTextProperty * textProp){};
+ 	Window DefaultRootWindow(Display* nativeDisplayType){return Window();};
+@@ -86,8 +85,16 @@ namespace Ogre {
+ 
+     X11EGLSupport::X11EGLSupport()
+     {
+-        // A connection that might be shared with the application for GL rendering:
+-        mGLDisplay = getGLDisplay();
++	// Checks if exists an EGLDisplay, to avoid reinitializing it.
++	bool exists = false;
++	mGLDisplay = checkExistingGLDisplay();
++	if (mGLDisplay == EGL_NO_DISPLAY) {
++	    mGLDisplay = (EGLDisplay *) 0;
++            // A connection that might be shared with the application for GL rendering:
++            mGLDisplay = getGLDisplay();
++	} else {
++	    exists = true;
++	}
+ 
+         // A connection that is NOT shared to enable independent event processing:
+         mNativeDisplay = getNativeDisplay();
+@@ -103,6 +110,9 @@ namespace Ogre {
+ 
+         mVideoModes.push_back(mCurrentMode);
+ 
++	if (exists) 
++	    return;
++
+         EGLConfig *glConfigs;
+         int config, nConfigs = 0;
+ 
+@@ -144,7 +154,6 @@ namespace Ogre {
+         if (!mNativeDisplay)
+         {
+ 	    mNativeDisplay = (NativeDisplayType)XOpenDisplay(NULL);
+-
+             if (!mNativeDisplay)
+             {
+                 OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR,
+@@ -277,6 +286,15 @@ namespace Ogre {
+         }
+         return mGLDisplay;
+     }
++
++    EGLDisplay X11EGLSupport::checkExistingGLDisplay()
++    {
++        if (!mGLDisplay)
++        {
++            return EGLSupport::checkExistingGLDisplay();
++        }
++        return mGLDisplay;
++    }
+ 
+ }
+ 
+diff -rupN -xOgreGLES2UniformCacheImp.cpp -xOgreGLES2PixelFormat.cpp -xOgreGLES2Prerequisites.h -xOgreEGLRenderTexture.cpp OgreLocal/ogre/RenderSystems/GLES2/src/EGL/X11/OgreX11EGLWindow.cpp Ogre3D/ogre/RenderSystems/GLES2/src/EGL/X11/OgreX11EGLWindow.cpp
+--- OgreLocal/ogre/RenderSystems/GLES2/src/EGL/X11/OgreX11EGLWindow.cpp	2013-05-03 16:25:27.355536466 -0300
++++ Ogre3D/ogre/RenderSystems/GLES2/src/EGL/X11/OgreX11EGLWindow.cpp	2013-05-13 11:26:04.809727140 -0300
+@@ -456,7 +456,7 @@ namespace Ogre {
+             {
+                 eglContext = eglGetCurrentContext();
+                 EGL_CHECK_ERROR
+-                if (eglContext)
++                if (eglContext == (::EGLContext) 0)
+                 {
+                     OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR,
+                                 "currentGLContext was specified with no current GL context",
+@@ -467,6 +467,7 @@ namespace Ogre {
+                 EGL_CHECK_ERROR
+                 mEglSurface = eglGetCurrentSurface(EGL_DRAW);
+                 EGL_CHECK_ERROR
++		mIsExternalGLControl = true;
+             }
+ 
+             // Note: Some platforms support AA inside ordinary windows
+@@ -579,19 +580,21 @@ namespace Ogre {
+ 	    createNativeWindow(left, top, width, height, title);
+ 	}
+ 
+-	mContext = createEGLContext();
++        if (!mIsExternalGLControl) {
++            mContext = createEGLContext();
+ 
+-        ::EGLSurface oldDrawableDraw = eglGetCurrentSurface(EGL_DRAW);
+-        EGL_CHECK_ERROR
+-        ::EGLSurface oldDrawableRead = eglGetCurrentSurface(EGL_READ);
+-        EGL_CHECK_ERROR
+-        ::EGLContext oldContext  = eglGetCurrentContext();
+-        EGL_CHECK_ERROR
+-
+-        int glConfigID;
+-
+-        mGLSupport->getGLConfigAttrib(mEglConfig, EGL_CONFIG_ID, &glConfigID);
+-        LogManager::getSingleton().logMessage("EGLWindow::create used FBConfigID = " + StringConverter::toString(glConfigID));
++            ::EGLSurface oldDrawableDraw = eglGetCurrentSurface(EGL_DRAW);
++            EGL_CHECK_ERROR
++            ::EGLSurface oldDrawableRead = eglGetCurrentSurface(EGL_READ);
++            EGL_CHECK_ERROR
++            ::EGLContext oldContext  = eglGetCurrentContext();
++            EGL_CHECK_ERROR
++
++            int glConfigID;
++
++            mGLSupport->getGLConfigAttrib(mEglConfig, EGL_CONFIG_ID, &glConfigID);
++            LogManager::getSingleton().logMessage("EGLWindow::create used FBConfigID = " + StringConverter::toString(glConfigID));
++        }	
+ 
+         mName = name;
+         mWidth = width;

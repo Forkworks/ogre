@@ -1,0 +1,21 @@
+include(CMakeForceCompiler)
+set(CMAKE_CROSSCOMPILING   TRUE)
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_VERSION 1)
+set(CMAKE_SYSTEM_PROCESSOR "armv7-a")
+set(CMAKE_CXX_FLAGS "-fPIC -frtti -fexceptions")
+#set(CMAKE_C_FLAGS "-fPIC -fexceptions" )
+set(CMAKE_C_COMPILER /home/lscandolo/Apps/Linaro/toolchain/bin/arm-linux-gnueabihf-gcc)
+#set(CMAKE_C_COMPILER /home/lscandolo/Apps/Linaro/toolchain/arm-linux-gnueabihf/bin/gcc)
+set(CMAKE_CXX_COMPILER /home/lscandolo/Apps/Linaro/toolchain/bin/arm-linux-gnueabihf-g++)
+#set(CMAKE_CXX_COMPILER /home/lscandolo/Apps/Linaro/toolchain/arm-linux-gnueabihf/bin/g++)
+CMAKE_FORCE_C_COMPILER("${CMAKE_C_COMPILER}" GNU)
+CMAKE_FORCE_CXX_COMPILER("${CMAKE_CXX_COMPILER}" GNU)
+set(CMAKE_FIND_ROOT_PATH  /mnt/linaro-quantal)
+# search for programs in the build host directories
+SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+# for libraries and headers in the target directories
+SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+include_directories( SYSTEM /mnt/linaro-quantal/usr/include/arm-linux-gnueabihf)
+#/mnt/linaro-quantal/usr/include/arm-linux-gnueabihf/

@@ -456,7 +456,7 @@ namespace Ogre {
             {
                 eglContext = eglGetCurrentContext();
                 EGL_CHECK_ERROR
-                if (eglContext)
+                if (eglContext == (::EGLContext) 0)
                 {
                     OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR,
                                 "currentGLContext was specified with no current GL context",
@@ -467,6 +467,7 @@ namespace Ogre {
                 EGL_CHECK_ERROR
                 mEglSurface = eglGetCurrentSurface(EGL_DRAW);
                 EGL_CHECK_ERROR
+		mIsExternalGLControl = true;
             }
 
             // Note: Some platforms support AA inside ordinary windows
@@ -579,19 +580,25 @@ namespace Ogre {
 	    createNativeWindow(left, top, width, height, title);
 	}
 
-	mContext = createEGLContext();
+        if (!mIsExternalGLControl) {
+            mContext = createEGLContext();
 
-        ::EGLSurface oldDrawableDraw = eglGetCurrentSurface(EGL_DRAW);
-        EGL_CHECK_ERROR
-        ::EGLSurface oldDrawableRead = eglGetCurrentSurface(EGL_READ);
-        EGL_CHECK_ERROR
-        ::EGLContext oldContext  = eglGetCurrentContext();
-        EGL_CHECK_ERROR
+            ::EGLSurface oldDrawableDraw = eglGetCurrentSurface(EGL_DRAW);
+            EGL_CHECK_ERROR
+            ::EGLSurface oldDrawableRead = eglGetCurrentSurface(EGL_READ);
+            EGL_CHECK_ERROR
+            ::EGLContext oldContext  = eglGetCurrentContext();
+            EGL_CHECK_ERROR
 
-        int glConfigID;
+            int glConfigID;
 
-        mGLSupport->getGLConfigAttrib(mEglConfig, EGL_CONFIG_ID, &glConfigID);
-        LogManager::getSingleton().logMessage("EGLWindow::create used FBConfigID = " + StringConverter::toString(glConfigID));
+            mGLSupport->getGLConfigAttrib(mEglConfig, EGL_CONFIG_ID, &glConfigID);
+            LogManager::getSingleton().logMessage("EGLWindow::create used FBConfigID = " + StringConverter::toString(glConfigID));
+        }	
+
+        /// !!!
+		// mContext = new X11EGLContext(eglGetCurrentDisplay(), mGLSupport, mEglConfig, mEglSurface);
+		// mContext = new X11EGLContext(eglGetCurrentDisplay(), mGLSupport, mEglConfig, mEglSurface,  eglGetCurrentContext());
 
         mName = name;
         mWidth = width;
@@ -603,6 +610,7 @@ namespace Ogre {
 
         mClosed = false;
 	}
+
 
 }
 

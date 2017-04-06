@@ -301,6 +301,7 @@ namespace Ogre
 	//---------------------------------------------------------------------
 	MaterialPtr TerrainMaterialGeneratorA::SM2Profile::generateForCompositeMap(const Terrain* terrain)
 	{
+
 		// re-use old material if exists
 		MaterialPtr mat = terrain->_getCompositeMapMaterial();
 		if (mat.isNull())
@@ -536,6 +537,7 @@ namespace Ogre
 		}
 
 		generateFpFooter(prof, terrain, tt, outStream);
+        
 	}
 	//---------------------------------------------------------------------
 	void TerrainMaterialGeneratorA::SM2Profile::ShaderHelper::defaultVpParams(
@@ -730,7 +732,6 @@ namespace Ogre
 		// TODO - parameterise this?
 		Vector4 scaleBiasSpecular(0.03, -0.04, 32, 1);
 		params->setNamedConstant("scaleBiasSpecular", scaleBiasSpecular);
-
 	}
 	//---------------------------------------------------------------------
 	String TerrainMaterialGeneratorA::SM2Profile::ShaderHelper::getChannel(uint idx)

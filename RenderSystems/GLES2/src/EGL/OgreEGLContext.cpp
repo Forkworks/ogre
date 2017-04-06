@@ -54,6 +54,27 @@ namespace Ogre {
         _createInternalResources(eglDisplay, glconfig, drawable, shareContext);
     }
 
+    EGLContext::EGLContext(EGLDisplay eglDisplay,
+							const EGLSupport* glsupport,
+                           ::EGLConfig glconfig,
+                           ::EGLSurface drawable,
+                           ::EGLContext eglContext)
+        : mGLSupport(glsupport),
+          mContext(eglContext)
+    {
+		assert(drawable);
+        GLES2RenderSystem* renderSystem = static_cast<GLES2RenderSystem*>(Root::getSingleton().getRenderSystem());
+        EGLContext* mainContext = static_cast<EGLContext*>(renderSystem->_getMainContext());
+        ::EGLContext shareContext = (::EGLContext) 0;
+
+        if (mainContext)
+        {
+            shareContext = mainContext->mContext;
+        }
+
+        _createInternalResources(eglDisplay, glconfig, drawable, shareContext);
+    }
+
     EGLContext::~EGLContext()
     {
         GLES2RenderSystem *rs =
@@ -69,7 +90,8 @@ namespace Ogre {
         mConfig = glconfig;
         mEglDisplay = eglDisplay;
         
-        mContext = mGLSupport->createNewContext(mEglDisplay, mConfig, shareContext);
+        if (!mContext)
+            mContext = mGLSupport->createNewContext(mEglDisplay, mConfig, shareContext);
         
         if (!mContext)
         {

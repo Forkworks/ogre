@@ -47,6 +47,7 @@ namespace Ogre {
 
         public:
             EGLContext(EGLDisplay eglDisplay, const EGLSupport* glsupport, ::EGLConfig fbconfig, ::EGLSurface drawable);
+            EGLContext(EGLDisplay eglDisplay, const EGLSupport* glsupport, ::EGLConfig fbconfig, ::EGLSurface drawable, ::EGLContext eglContext);
 
             virtual ~EGLContext();
 

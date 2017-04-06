@@ -158,7 +158,29 @@ elseif(FLASHCC)
   )
 
   set(PLATFORM_HEADER_INSTALL "FlashCC")
+
 elseif (UNIX)
+
+  message("Define variable EGLFS to compile for eglfs")
+
+ if (DEFINED EGLFS)
+
+  file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/EGLFS/*.h")
+  file(GLOB PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/EGLFS/*.cpp"
+      src/OgreSearchOps.cpp)
+
+  # find_library(DL_LIBRARY NAMES dl dlsym)
+  # mark_as_advanced(DL_LIBRARY)
+  # if (DL_LIBRARY)
+  #   list(APPEND PLATFORM_LIBS dl)
+  # endif ()
+
+  message("compiling for eglfs")
+
+ else ()
+
+  message("not compiling for eglfs")
+
   include_directories(include/GLX ${X11_INCLUDE_DIR})
 
   file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/GLX/*.h"
@@ -173,7 +195,11 @@ elseif (UNIX)
   mark_as_advanced(DL_LIBRARY)
   if (DL_LIBRARY)
     list(APPEND PLATFORM_LIBS dl)
+
   endif ()
+
+ endif ()
+
 endif()
 
 # Configure threading files

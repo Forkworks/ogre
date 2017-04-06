@@ -1,0 +1,20 @@
+--- GLES2/src/EGL/OgreEGLSupport.cpp 2014-01-21 19:27:16.000000000 -0300
++++ GLES2/src/EGL/OgreEGLSupport.cpp 2014-01-23 16:38:20.468063165 -0300
+@@ -150,7 +150,7 @@
+                 }
+             }
+ 
+-            if (!optDisplayFrequency->second.possibleValues.empty())
++            /*if (!optDisplayFrequency->second.possibleValues.empty())
+             {
+                 optDisplayFrequency->second.currentValue = optDisplayFrequency->second.possibleValues[0];
+             }
+@@ -158,7 +158,7 @@
+             {
+                 optVideoMode->second.currentValue = StringConverter::toString(mVideoModes[0].first.first,4) + " x " + StringConverter::toString(mVideoModes[0].first.second,4);
+                 optDisplayFrequency->second.currentValue = StringConverter::toString(mVideoModes[0].second) + " MHz";
+-            }
++            }*/
+         }
+     }
+ 

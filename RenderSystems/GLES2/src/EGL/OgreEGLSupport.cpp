@@ -39,7 +39,6 @@ THE SOFTWARE.
 #include "OgreEGLWindow.h"
 #include "OgreEGLRenderTexture.h"
 
-
 namespace Ogre {
 
 
@@ -150,7 +149,7 @@ namespace Ogre {
                 }
             }
 
-            if (!optDisplayFrequency->second.possibleValues.empty())
+            /*if (!optDisplayFrequency->second.possibleValues.empty())
             {
                 optDisplayFrequency->second.currentValue = optDisplayFrequency->second.possibleValues[0];
             }
@@ -158,7 +157,7 @@ namespace Ogre {
             {
                 optVideoMode->second.currentValue = StringConverter::toString(mVideoModes[0].first.first,4) + " x " + StringConverter::toString(mVideoModes[0].first.second,4);
                 optDisplayFrequency->second.currentValue = StringConverter::toString(mVideoModes[0].second) + " MHz";
-            }
+            }*/
         }
     }
 
@@ -183,7 +182,6 @@ namespace Ogre {
 
         mGLDisplay = eglGetDisplay(mNativeDisplay);
         EGL_CHECK_ERROR
-
         if(mGLDisplay == EGL_NO_DISPLAY)
         {
             OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR,
@@ -201,6 +199,12 @@ namespace Ogre {
         return mGLDisplay;
     }
 
+    EGLDisplay EGLSupport::checkExistingGLDisplay(void)
+    {
+	mGLDisplay = eglGetCurrentDisplay();
+        EGL_CHECK_ERROR
+	return mGLDisplay;
+    }
 
     String EGLSupport::getDisplayName(void)
     {
@@ -306,6 +310,12 @@ namespace Ogre {
                         __FUNCTION__);
             return 0;
         }
+	if (!glConfig) {
+		OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR,
+                        "Fail to get config from drawable",
+                        __FUNCTION__);
+        }	
+
         EGL_CHECK_ERROR
         eglQuerySurface(mGLDisplay, drawable, EGL_WIDTH, (EGLint *) w);
         EGL_CHECK_ERROR

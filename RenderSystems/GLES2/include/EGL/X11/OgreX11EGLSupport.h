@@ -165,6 +165,10 @@ namespace Ogre {
 			//Then it calls EGLSupport::getDLDisplay to do the rest of the work.
 			EGLDisplay getGLDisplay();
 
+			// Same as getGLDisplay but only returns current display without initializing it.
+			// Useful when someone other than Ogre controls the current EGLDisplay.
+			EGLDisplay checkExistingGLDisplay(void);
+
 			//Moved this here from EGLSupport because maybe it should be more native.
 	                RenderWindow* newWindow(const String& name,
             	                        unsigned int width, unsigned int height,

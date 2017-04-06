@@ -75,6 +75,7 @@ namespace Ogre {
             void setConfigOption(const String &name, const String &value);
             virtual String getDisplayName (void);
 			EGLDisplay getGLDisplay(void);
+	    		EGLDisplay checkExistingGLDisplay(void);
 			void setGLDisplay(EGLDisplay val);
 			EGLConfig* chooseGLConfig(const EGLint *attribList, EGLint *nElements);
 			EGLConfig* getConfigs(EGLint *nElements);

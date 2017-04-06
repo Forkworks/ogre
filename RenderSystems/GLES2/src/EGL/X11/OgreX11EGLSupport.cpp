@@ -40,7 +40,6 @@ THE SOFTWARE.
 #include "OgreX11EGLRenderTexture.h"
 #include "OgreX11EGLContext.h"
 
-
 #if (OGRE_PLATFORM != OGRE_PLATFORM_LINUX)
 	void XStringListToTextProperty(char ** prop, int num, XTextProperty * textProp){};
 	Window DefaultRootWindow(Display* nativeDisplayType){return Window();};
@@ -86,8 +85,16 @@ namespace Ogre {
 
     X11EGLSupport::X11EGLSupport()
     {
-        // A connection that might be shared with the application for GL rendering:
-        mGLDisplay = getGLDisplay();
+	// Checks if exists an EGLDisplay, to avoid reinitializing it.
+	bool exists = false;
+	mGLDisplay = checkExistingGLDisplay();
+	if (mGLDisplay == EGL_NO_DISPLAY) {
+	    mGLDisplay = (EGLDisplay *) 0;
+            // A connection that might be shared with the application for GL rendering:
+            mGLDisplay = getGLDisplay();
+	} else {
+	    exists = true;
+	}
 
         // A connection that is NOT shared to enable independent event processing:
         mNativeDisplay = getNativeDisplay();
@@ -102,6 +109,9 @@ namespace Ogre {
         mOriginalMode = mCurrentMode;
 
         mVideoModes.push_back(mCurrentMode);
+
+	if (exists) 
+	    return;
 
         EGLConfig *glConfigs;
         int config, nConfigs = 0;
@@ -144,7 +154,6 @@ namespace Ogre {
         if (!mNativeDisplay)
         {
 	    mNativeDisplay = (NativeDisplayType)XOpenDisplay(NULL);
-
             if (!mNativeDisplay)
             {
                 OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR,
@@ -274,6 +283,15 @@ namespace Ogre {
             if(!mNativeDisplay)
                 mNativeDisplay = getNativeDisplay();
             return EGLSupport::getGLDisplay();
+        }
+        return mGLDisplay;
+    }
+
+    EGLDisplay X11EGLSupport::checkExistingGLDisplay()
+    {
+        if (!mGLDisplay)
+        {
+            return EGLSupport::checkExistingGLDisplay();
         }
         return mGLDisplay;
     }

@@ -1,0 +1,12 @@
+--- FeatureSummary.cmake 2014-01-21 19:26:54.000000000 -0300
++++ FeatureSummary.cmake 2014-01-23 14:51:04.507264023 -0300
+@@ -86,6 +86,9 @@
+ endif ()
+ if (OGRE_BUILD_RENDERSYSTEM_GLES2)
+    set(_rendersystems "${_rendersystems}  + OpenGL ES 2.x\n")
++   if (EGLFS)
++      set(_rendersystems "${_rendersystems}  + OpenGL ES 2.x (EGLFS Backend)\n")
++      endif ()
+ endif ()
+ 
+ if (DEFINED _rendersystems)

@@ -249,8 +249,10 @@ namespace Ogre {
         ::EGLSurface surface;
 
         surface = eglCreateWindowSurface(display, mEglConfig, (EGLNativeWindowType)win, NULL);
+std::cout << "@@ " << eglGetError();
         EGL_CHECK_ERROR
 
+std::cout << "@@ " << eglGetError();
         if (surface == EGL_NO_SURFACE)
         {
             OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR,

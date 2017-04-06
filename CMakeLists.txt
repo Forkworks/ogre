@@ -42,7 +42,6 @@ if (APPLE)
   set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 endif ()
 
-
 project(OGRE)
 
 # Include necessary submodules

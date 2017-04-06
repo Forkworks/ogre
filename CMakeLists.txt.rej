@@ -1,0 +1,56 @@
+--- /dev/null
++++ /dev/null
+@@ -42,7 +42,6 @@
+   set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
+ endif ()
+ 
+-
+ project(OGRE)
+ 
+ # Include necessary submodules
+@@ -220,6 +219,10 @@
+ set(OGRE_Plugin_PCZSceneManager_LIBRARIES Plugin_PCZSceneManager)
+ set(OGRE_Plugin_OctreeZone_LIBRARIES Plugin_OctreeZone)
+ 
++if (UNIX)
++  set(EGLFS 1) 
++endif (UNIX)
++
+ # Specify build paths
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${OGRE_BINARY_DIR}/lib")
+ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OGRE_BINARY_DIR}/lib")
+--- CMakeLists.txt 2014-01-21 19:23:22.000000000 -0300
++++ CMakeLists.txt 2014-01-23 16:09:37.292031711 -0300
+@@ -159,15 +159,25 @@
+ 
+   set(PLATFORM_HEADER_INSTALL "FlashCC")
+ elseif (UNIX)
+-  include_directories(include/GLX ${X11_INCLUDE_DIR})
++  if (NOT EGLFS)
++      include_directories(include/GLX ${X11_INCLUDE_DIR})
+ 
+-  file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/GLX/*.h"
+-      "${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/GLX_backdrop.h")
+-  file(GLOB PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/*.cpp"
+-      src/OgreSearchOps.cpp)
++      file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/GLX/*.h"
++          "${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/GLX_backdrop.h")
++      file(GLOB PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/*.cpp"
++          src/OgreSearchOps.cpp)
+ 
+-  set(PLATFORM_LIBS ${X11_LIBRARIES} ${X11_Xt_LIB} ${XAW_LIBRARY} pthread)
+-  set(PLATFORM_HEADER_INSTALL "GLX")
++      set(PLATFORM_LIBS ${X11_LIBRARIES} ${X11_Xt_LIB} ${XAW_LIBRARY} pthread)
++      set(PLATFORM_HEADER_INSTALL "GLX")
++  else()
++      file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/GLX/OgreTimerImp.h"
++          "${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/GLX_backdrop.h")
++      file(GLOB PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/OgreFileSystemLayer.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/OgreTimer.cpp"
++          src/OgreSearchOps.cpp)
++
++      set(PLATFORM_LIBS pthread)
++      set(PLATFORM_HEADER_INSTALL "GLX")
++  endif()
+   # some platforms require explicit linking to libdl, see if it's available
+   find_library(DL_LIBRARY NAMES dl dlsym)
+   mark_as_advanced(DL_LIBRARY)

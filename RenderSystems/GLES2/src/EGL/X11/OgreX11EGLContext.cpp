@@ -43,6 +43,15 @@ namespace Ogre {
     {
     }
 
+    X11EGLContext::X11EGLContext(EGLDisplay eglDisplay,
+			   const EGLSupport* glsupport,
+                     ::EGLConfig glconfig,
+                     ::EGLSurface drawable,
+                     ::EGLContext eglContext)
+    : EGLContext(eglDisplay, glsupport, glconfig, drawable, eglContext)
+    {
+    }
+
     X11EGLContext::~X11EGLContext()
     {
     }

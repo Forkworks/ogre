@@ -16,6 +16,10 @@
 typedef khronos_int64_t  GLint64EXT;
 typedef khronos_uint64_t GLuint64EXT;
 
+//////////// !! Needed Defs
+typedef char GLchar;
+//////////////////////////
+
 #ifndef __gl2_h_
 #define __gl2_h_
 #endif
@@ -334,6 +338,7 @@ typedef void (GL_APIENTRY* PFNGLEXTGETPROGRAMBINARYSOURCEQCOMPROC) (GLuint progr
 typedef void (GL_APIENTRY* PFNGLSTARTTILINGQCOMPROC) (GLuint x, GLuint y, GLuint width, GLuint height, GLbitfield preserveMask);
 typedef void (GL_APIENTRY* PFNGLENDTILINGQCOMPROC) (GLbitfield preserveMask);
 
+
 extern PFNGLACTIVETEXTUREPROC gleswActiveTexture;
 extern PFNGLATTACHSHADERPROC gleswAttachShader;
 extern PFNGLBINDATTRIBLOCATIONPROC gleswBindAttribLocation;
@@ -476,6 +481,19 @@ extern PFNGLVERTEXATTRIB4FPROC gleswVertexAttrib4f;
 extern PFNGLVERTEXATTRIB4FVPROC gleswVertexAttrib4fv;
 extern PFNGLVERTEXATTRIBPOINTERPROC gleswVertexAttribPointer;
 extern PFNGLVIEWPORTPROC gleswViewport;
+
+    ////////////////////// Multisample support
+
+extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC gleswRenderbufferStorageMultisampleANGLE;
+extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEAPPLEPROC gleswRenderbufferStorageMultisampleAPPLE;
+extern PFNGLRESOLVEMULTISAMPLEFRAMEBUFFERAPPLEPROC gleswResolveMultisampleFramebufferAPPLE;
+extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC gleswRenderbufferStorageMultisampleEXT;
+extern PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC gleswFramebufferTexture2DMultisampleEXT;
+extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMGPROC gleswRenderbufferStorageMultisampleIMG;
+extern PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC gleswFramebufferTexture2DMultisampleIMG;
+extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLENVPROC gleswRenderbufferStorageMultisampleNV;
+
+
 extern PFNGLEGLIMAGETARGETTEXTURE2DOESPROC gleswEGLImageTargetTexture2DOES;
 extern PFNGLEGLIMAGETARGETRENDERBUFFERSTORAGEOESPROC gleswEGLImageTargetRenderbufferStorageOES;
 extern PFNGLGETPROGRAMBINARYOESPROC gleswGetProgramBinaryOES;
@@ -516,7 +534,6 @@ extern PFNGLBEGINPERFMONITORAMDPROC gleswBeginPerfMonitorAMD;
 extern PFNGLENDPERFMONITORAMDPROC gleswEndPerfMonitorAMD;
 extern PFNGLGETPERFMONITORCOUNTERDATAAMDPROC gleswGetPerfMonitorCounterDataAMD;
 extern PFNGLBLITFRAMEBUFFERANGLEPROC gleswBlitFramebufferANGLE;
-extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC gleswRenderbufferStorageMultisampleANGLE;
 extern PFNGLDRAWARRAYSINSTANCEDANGLEPROC gleswDrawArraysInstancedANGLE;
 extern PFNGLDRAWELEMENTSINSTANCEDANGLEPROC gleswDrawElementsInstancedANGLE;
 extern PFNGLVERTEXATTRIBDIVISORANGLEPROC gleswVertexAttribDivisorANGLE;
@@ -525,8 +542,6 @@ extern PFNGLDRAWARRAYSINSTANCEDEXTPROC gleswDrawArraysInstancedEXT;
 extern PFNGLDRAWELEMENTSINSTANCEDEXTPROC gleswDrawElementsInstancedEXT;
 extern PFNGLVERTEXATTRIBDIVISOREXTPROC gleswVertexAttribDivisorEXT;
 extern PFNGLCOPYTEXTURELEVELSAPPLEPROC gleswCopyTextureLevelsAPPLE;
-extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEAPPLEPROC gleswRenderbufferStorageMultisampleAPPLE;
-extern PFNGLRESOLVEMULTISAMPLEFRAMEBUFFERAPPLEPROC gleswResolveMultisampleFramebufferAPPLE;
 extern PFNGLFENCESYNCAPPLEPROC gleswFenceSyncAPPLE;
 extern PFNGLISSYNCAPPLEPROC gleswIsSyncAPPLE;
 extern PFNGLDELETESYNCAPPLEPROC gleswDeleteSyncAPPLE;
@@ -553,8 +568,6 @@ extern PFNGLGETQUERYOBJECTI64VEXTPROC gleswGetQueryObjecti64vEXT;
 extern PFNGLGETQUERYOBJECTUI64VEXTPROC gleswGetQueryObjectui64vEXT;
 extern PFNGLMAPBUFFERRANGEEXTPROC gleswMapBufferRangeEXT;
 extern PFNGLFLUSHMAPPEDBUFFERRANGEEXTPROC gleswFlushMappedBufferRangeEXT;
-extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC gleswRenderbufferStorageMultisampleEXT;
-extern PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC gleswFramebufferTexture2DMultisampleEXT;
 extern PFNGLREADBUFFERINDEXEDEXTPROC gleswReadBufferIndexedEXT;
 extern PFNGLDRAWBUFFERSINDEXEDEXTPROC gleswDrawBuffersIndexedEXT;
 extern PFNGLGETINTEGERI_VEXTPROC gleswGetIntegeri_vEXT;
@@ -600,8 +613,6 @@ extern PFNGLTEXSTORAGE3DEXTPROC gleswTexStorage3DEXT;
 extern PFNGLTEXTURESTORAGE1DEXTPROC gleswTextureStorage1DEXT;
 extern PFNGLTEXTURESTORAGE2DEXTPROC gleswTextureStorage2DEXT;
 extern PFNGLTEXTURESTORAGE3DEXTPROC gleswTextureStorage3DEXT;
-extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMGPROC gleswRenderbufferStorageMultisampleIMG;
-extern PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC gleswFramebufferTexture2DMultisampleIMG;
 extern PFNGLCOVERAGEMASKNVPROC gleswCoverageMaskNV;
 extern PFNGLCOVERAGEOPERATIONNVPROC gleswCoverageOperationNV;
 extern PFNGLDRAWBUFFERSNVPROC gleswDrawBuffersNV;
@@ -615,7 +626,6 @@ extern PFNGLGETFENCEIVNVPROC gleswGetFenceivNV;
 extern PFNGLFINISHFENCENVPROC gleswFinishFenceNV;
 extern PFNGLSETFENCENVPROC gleswSetFenceNV;
 extern PFNGLBLITFRAMEBUFFERNVPROC gleswBlitFramebufferNV;
-extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLENVPROC gleswRenderbufferStorageMultisampleNV;
 extern PFNGLVERTEXATTRIBDIVISORNVPROC gleswVertexAttribDivisorNV;
 extern PFNGLREADBUFFERNVPROC gleswReadBufferNV;
 extern PFNGLALPHAFUNCQCOMPROC gleswAlphaFuncQCOM;
@@ -637,6 +647,8 @@ extern PFNGLEXTISPROGRAMBINARYQCOMPROC gleswExtIsProgramBinaryQCOM;
 extern PFNGLEXTGETPROGRAMBINARYSOURCEQCOMPROC gleswExtGetProgramBinarySourceQCOM;
 extern PFNGLSTARTTILINGQCOMPROC gleswStartTilingQCOM;
 extern PFNGLENDTILINGQCOMPROC gleswEndTilingQCOM;
+
+#if 0
 
 #define glActiveTexture		gleswActiveTexture
 #define glAttachShader		gleswAttachShader
@@ -780,6 +792,17 @@ extern PFNGLENDTILINGQCOMPROC gleswEndTilingQCOM;
 #define glVertexAttrib4fv		gleswVertexAttrib4fv
 #define glVertexAttribPointer		gleswVertexAttribPointer
 #define glViewport		gleswViewport
+
+#define glRenderbufferStorageMultisampleANGLE		gleswRenderbufferStorageMultisampleANGLE
+#define glRenderbufferStorageMultisampleAPPLE		gleswRenderbufferStorageMultisampleAPPLE
+#define glResolveMultisampleFramebufferAPPLE		gleswResolveMultisampleFramebufferAPPLE
+#define glRenderbufferStorageMultisampleEXT		gleswRenderbufferStorageMultisampleEXT
+#define glFramebufferTexture2DMultisampleEXT		gleswFramebufferTexture2DMultisampleEXT
+#define glRenderbufferStorageMultisampleIMG		gleswRenderbufferStorageMultisampleIMG
+#define glFramebufferTexture2DMultisampleIMG		gleswFramebufferTexture2DMultisampleIMG
+#define glRenderbufferStorageMultisampleNV		gleswRenderbufferStorageMultisampleNV
+
+
 #define glEGLImageTargetTexture2DOES		gleswEGLImageTargetTexture2DOES
 #define glEGLImageTargetRenderbufferStorageOES		gleswEGLImageTargetRenderbufferStorageOES
 #define glGetProgramBinaryOES		gleswGetProgramBinaryOES
@@ -820,17 +843,11 @@ extern PFNGLENDTILINGQCOMPROC gleswEndTilingQCOM;
 #define glEndPerfMonitorAMD		gleswEndPerfMonitorAMD
 #define glGetPerfMonitorCounterDataAMD		gleswGetPerfMonitorCounterDataAMD
 #define glBlitFramebufferANGLE		gleswBlitFramebufferANGLE
-#define glRenderbufferStorageMultisampleANGLE		gleswRenderbufferStorageMultisampleANGLE
 #define glDrawArraysInstancedANGLE		gleswDrawArraysInstancedANGLE
 #define glDrawElementsInstancedANGLE		gleswDrawElementsInstancedANGLE
 #define glVertexAttribDivisorANGLE		gleswVertexAttribDivisorANGLE
 #define glGetTranslatedShaderSourceANGLE		gleswGetTranslatedShaderSourceANGLE
-#define glDrawArraysInstancedEXT		gleswDrawArraysInstancedEXT
-#define glDrawElementsInstancedEXT		gleswDrawElementsInstancedEXT
-#define glVertexAttribDivisorEXT		gleswVertexAttribDivisorEXT
 #define glCopyTextureLevelsAPPLE		gleswCopyTextureLevelsAPPLE
-#define glRenderbufferStorageMultisampleAPPLE		gleswRenderbufferStorageMultisampleAPPLE
-#define glResolveMultisampleFramebufferAPPLE		gleswResolveMultisampleFramebufferAPPLE
 #define glFenceSyncAPPLE		gleswFenceSyncAPPLE
 #define glIsSyncAPPLE		gleswIsSyncAPPLE
 #define glDeleteSyncAPPLE		gleswDeleteSyncAPPLE
@@ -857,8 +874,6 @@ extern PFNGLENDTILINGQCOMPROC gleswEndTilingQCOM;
 #define glGetQueryObjectui64vEXT		gleswGetQueryObjectui64vEXT
 #define glMapBufferRangeEXT		gleswMapBufferRangeEXT
 #define glFlushMappedBufferRangeEXT		gleswFlushMappedBufferRangeEXT
-#define glRenderbufferStorageMultisampleEXT		gleswRenderbufferStorageMultisampleEXT
-#define glFramebufferTexture2DMultisampleEXT		gleswFramebufferTexture2DMultisampleEXT
 #define glReadBufferIndexedEXT		gleswReadBufferIndexedEXT
 #define glDrawBuffersIndexedEXT		gleswDrawBuffersIndexedEXT
 #define glGetIntegeri_vEXT		gleswGetIntegeri_vEXT
@@ -904,8 +919,6 @@ extern PFNGLENDTILINGQCOMPROC gleswEndTilingQCOM;
 #define glTextureStorage1DEXT		gleswTextureStorage1DEXT
 #define glTextureStorage2DEXT		gleswTextureStorage2DEXT
 #define glTextureStorage3DEXT		gleswTextureStorage3DEXT
-#define glRenderbufferStorageMultisampleIMG		gleswRenderbufferStorageMultisampleIMG
-#define glFramebufferTexture2DMultisampleIMG		gleswFramebufferTexture2DMultisampleIMG
 #define glCoverageMaskNV		gleswCoverageMaskNV
 #define glCoverageOperationNV		gleswCoverageOperationNV
 #define glDrawBuffersNV		gleswDrawBuffersNV
@@ -919,7 +932,6 @@ extern PFNGLENDTILINGQCOMPROC gleswEndTilingQCOM;
 #define glFinishFenceNV		gleswFinishFenceNV
 #define glSetFenceNV		gleswSetFenceNV
 #define glBlitFramebufferNV		gleswBlitFramebufferNV
-#define glRenderbufferStorageMultisampleNV		gleswRenderbufferStorageMultisampleNV
 #define glVertexAttribDivisorNV		gleswVertexAttribDivisorNV
 #define glReadBufferNV		gleswReadBufferNV
 #define glAlphaFuncQCOM		gleswAlphaFuncQCOM
@@ -941,6 +953,12 @@ extern PFNGLENDTILINGQCOMPROC gleswEndTilingQCOM;
 #define glExtGetProgramBinarySourceQCOM		gleswExtGetProgramBinarySourceQCOM
 #define glStartTilingQCOM		gleswStartTilingQCOM
 #define glEndTilingQCOM		gleswEndTilingQCOM
+
+#endif
+
+#define glDrawArraysInstancedEXT		gleswDrawArraysInstancedEXT
+#define glVertexAttribDivisorEXT		gleswVertexAttribDivisorEXT
+#define glDrawElementsInstancedEXT		gleswDrawElementsInstancedEXT
 
 #ifdef __cplusplus
 }

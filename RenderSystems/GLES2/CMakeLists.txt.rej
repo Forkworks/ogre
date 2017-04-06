@@ -1,0 +1,28 @@
+--- GLES2/CMakeLists.txt 2014-01-21 19:27:16.000000000 -0300
++++ GLES2/CMakeLists.txt 2014-01-23 15:13:02.807288086 -0300
+@@ -106,12 +106,20 @@
+   link_directories(${OPENGLES2_LIBRARY_PATH})
+   set(PLATFORM_HEADER_INSTALL "APPLE")
+ elseif (UNIX)
+-  file(GLOB PLATFORM_HEADERS "include/EGL/X11/*.h" "include/EGL/*.h")
+-  file(GLOB PLATFORM_SOURCES "src/EGL/X11/*.cpp" "src/EGL/*.cpp")
++  if (EGLFS)
++    file(GLOB PLATFORM_HEADERS "include/EGL/EGLFS/*.h" "include/EGL/*.h")
++    file(GLOB PLATFORM_SOURCES "src/EGL/EGLFS/*.cpp" "src/EGL/*.cpp")
+ 
+-  include_directories(src/EGL/X11 include/EGL/X11)
+-  set(PLATFORM_HEADER_INSTALL "X11")
+-  set(PLATFORM_LIBS ${X11_LIBRARIES} ${X11_Xrandr_LIB})
++    include_directories(src/EGL/EGLFS include/EGL/EGLFS)
++    set(PLATFORM_HEADER_INSTALL "EGLFS")
++  else()
++    file(GLOB PLATFORM_HEADERS "include/EGL/X11/*.h" "include/EGL/*.h")
++    file(GLOB PLATFORM_SOURCES "src/EGL/X11/*.cpp" "src/EGL/*.cpp")
++
++    include_directories(src/EGL/X11 include/EGL/X11)
++    set(PLATFORM_HEADER_INSTALL "X11")
++    set(PLATFORM_LIBS ${X11_LIBRARIES} ${X11_Xrandr_LIB})
++  endif ()
+ endif ()
+ 
+ # Add support for the RT Shader System
