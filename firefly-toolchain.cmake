@@ -1,0 +1,31 @@
+include(CMakeForceCompiler)
+set(CMAKE_CROSSCOMPILING   TRUE)
+set(EGLFS TRUE)
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_VERSION 1)
+set(CMAKE_SYSTEM_PROCESSOR "armv7-a")
+set(CMAKE_CXX_FLAGS "-fPIC -frtti -fexceptions")
+#set(CMAKE_C_FLAGS "-fPIC -fexceptions" )
+set(CMAKE_C_COMPILER /opt/sbox-sdk/toolchains/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-gcc)
+set(CMAKE_CXX_COMPILER /opt/sbox-sdk/toolchains/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++)
+
+CMAKE_FORCE_C_COMPILER("${CMAKE_C_COMPILER}" GNU)
+CMAKE_FORCE_CXX_COMPILER("${CMAKE_CXX_COMPILER}" GNU)
+SET(PATH /mnt/firefly/lib/arm-linux-gnueabihf: /mnt/firefly/usr/lib/arm-linux-gnueabihf )
+
+set(CMAKE_FIND_ROOT_PATH  /mnt/firefly)
+set(CMAKE_SYSROOT /mnt/firefly)
+# search for programs in the build host directories
+SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM ONLY)
+# for libraries and headers in the target directories
+SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+include_directories( SYSTEM /mnt/firefly/usr/include/arm-linux-gnueabihf )
+link_directories(  /mnt/firefly/lib/arm-linux-gnueabihf )
+link_directories(  /mnt/firefly/usr/lib/arm-linux-gnueabihf )
+
+set( OGRE_DEPENCIES_DIR   /mnt/firefly/usr/lib;/mnt/firefly/lib;/mnt/firefly/lib/arm-linux-gnueabihf;/mnt/firefly/usr/lib/arm-linux-gnueabihf/)
+set( BOOST_LIBRARYDIR /mnt/firefly/usr/lib/arm-linux-gnueabihf )
+set( ZZip_LIBRARY_REL /mnt/firefly/usr/lib/arm-linux-gnueabihf/libzzip.so)
+set( FREETYPE_LIBRARY_REL /mnt/firefly/usr/lib/arm-linux-gnueabihf/libfreetype.so )
+set( ZLIB_LIBRARY_REL /mnt/firefly/usr/lib/arm-linux-gnueabihf/imlib2/loaders/zlib.so )
