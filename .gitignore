@@ -17,3 +17,4 @@ cmake-build-*/
 
 # Ignore vim files
 *.swp
+*.*~

@@ -12,7 +12,7 @@
 #include <OgreBitesPrerequisites.h>
 
 #if OGRE_BITES_HAVE_SDL
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #endif
 
 /** \addtogroup Optional

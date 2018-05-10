@@ -34,8 +34,9 @@ THE SOFTWARE.
 #include "OgreGLNativeSupport.h"
 #include <EGL/egl.h>
 #include "OgreEGLWindow.h"
+#include "OgreLogManager.h"
 
-#define ENABLE_EGL_CHECK 0
+#define ENABLE_EGL_CHECK 1
 
 #if ENABLE_EGL_CHECK
     #define EGL_CHECK_ERROR \

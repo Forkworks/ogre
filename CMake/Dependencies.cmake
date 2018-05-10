@@ -30,7 +30,7 @@ if(OGRE_BUILD_PLATFORM_EMSCRIPTEN)
   )
   set(CMAKE_FIND_ROOT_PATH ${CMAKE_FIND_ROOT_PATH} ${OGRE_DEP_SEARCH_PATH})
 elseif(APPLE_IOS)
-  set(OGRE_DEP_SEARCH_PATH 
+  set(OGRE_DEP_SEARCH_PATH
     ${OGRE_DEPENDENCIES_DIR}
     ${ENV_OGRE_DEPENDENCIES_DIR}
     "${OGRE_BINARY_DIR}/iOSDependencies"
@@ -39,7 +39,7 @@ elseif(APPLE_IOS)
     "${OGRE_SOURCE_DIR}/../iOSDependencies"
   )
 elseif(OGRE_BUILD_PLATFORM_ANDROID)
-  set(OGRE_DEP_SEARCH_PATH 
+  set(OGRE_DEP_SEARCH_PATH
     ${OGRE_DEPENDENCIES_DIR}
     ${ENV_OGRE_DEPENDENCIES_DIR}
     "${OGRE_BINARY_DIR}/AndroidDependencies"
@@ -48,7 +48,7 @@ elseif(OGRE_BUILD_PLATFORM_ANDROID)
     "${OGRE_SOURCE_DIR}/../AndroidDependencies"
   )
 else()
-  set(OGRE_DEP_SEARCH_PATH 
+  set(OGRE_DEP_SEARCH_PATH
     ${OGRE_DEPENDENCIES_DIR}
     ${ENV_OGRE_DEPENDENCIES_DIR}
     "${OGRE_BINARY_DIR}/Dependencies"
@@ -63,14 +63,14 @@ list(GET OGRE_DEP_SEARCH_PATH 0 OGREDEPS_PATH)
 
 if(CMAKE_CROSSCOMPILING)
     set(CROSS -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE})
-    
+
     if(ANDROID)
         set(CROSS ${CROSS}
             -DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL}
             -DANDROID_ABI=${ANDROID_ABI}
             -DANDROID_NDK=${ANDROID_NDK})
     endif()
-    
+
     if(APPLE_IOS)
         set(CROSS ${CROSS}
             -DIOS_PLATFORM=${IOS_PLATFORM})
@@ -99,11 +99,11 @@ if(OGRE_BUILD_DEPENDENCIES AND NOT EXISTS ${OGREDEPS_PATH})
 
     if(MSVC OR EMSCRIPTEN OR MINGW) # other platforms ship zlib
         message(STATUS "Building zlib")
-        file(DOWNLOAD 
+        file(DOWNLOAD
             http://zlib.net/zlib-1.2.11.tar.gz
-            ${OGRE_BINARY_DIR}/zlib-1.2.11.tar.gz 
+            ${OGRE_BINARY_DIR}/zlib-1.2.11.tar.gz
             EXPECTED_MD5 1c9f62f0778697a09d36121ead88e08e)
-        execute_process(COMMAND ${CMAKE_COMMAND} 
+        execute_process(COMMAND ${CMAKE_COMMAND}
             -E tar xf zlib-1.2.11.tar.gz WORKING_DIRECTORY ${OGRE_BINARY_DIR})
         execute_process(COMMAND ${CMAKE_COMMAND}
             -DCMAKE_INSTALL_PREFIX=${OGREDEPS_PATH}
@@ -114,7 +114,7 @@ if(OGRE_BUILD_DEPENDENCIES AND NOT EXISTS ${OGREDEPS_PATH})
             ${CROSS}
             ${CMAKE_BINARY_DIR}/zlib-1.2.11
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/zlib-1.2.11)
-        execute_process(COMMAND ${CMAKE_COMMAND} 
+        execute_process(COMMAND ${CMAKE_COMMAND}
             --build ${CMAKE_BINARY_DIR}/zlib-1.2.11 ${BUILD_COMMAND_OPTS})
     endif()
 
@@ -134,9 +134,9 @@ if(OGRE_BUILD_DEPENDENCIES AND NOT EXISTS ${OGREDEPS_PATH})
         ${CROSS}
         ${CMAKE_BINARY_DIR}/ZZIPlib-master
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/ZZIPlib-master)
-    execute_process(COMMAND ${CMAKE_COMMAND} 
+    execute_process(COMMAND ${CMAKE_COMMAND}
         --build ${CMAKE_BINARY_DIR}/ZZIPlib-master ${BUILD_COMMAND_OPTS})
-    
+
     message(STATUS "Building freetype")
     file(DOWNLOAD
         http://download.savannah.gnu.org/releases/freetype/freetype-2.9.tar.gz
@@ -168,7 +168,7 @@ if(OGRE_BUILD_DEPENDENCIES AND NOT EXISTS ${OGREDEPS_PATH})
         file(DOWNLOAD
             https://libsdl.org/release/SDL2-2.0.8.tar.gz
             ${OGRE_BINARY_DIR}/SDL2-2.0.8.tar.gz)
-        execute_process(COMMAND ${CMAKE_COMMAND} 
+        execute_process(COMMAND ${CMAKE_COMMAND}
             -E tar xf SDL2-2.0.8.tar.gz WORKING_DIRECTORY ${OGRE_BINARY_DIR})
         execute_process(COMMAND ${CMAKE_COMMAND}
             -E make_directory ${OGRE_BINARY_DIR}/SDL2-build)
@@ -209,7 +209,7 @@ find_package(Freetype)
 macro_log_feature(FREETYPE_FOUND "freetype" "Portable font engine" "http://www.freetype.org" FALSE "" "")
 
 # Find X11
-if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
+if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN AND NOT EGLFS)
   find_package(X11)
   macro_log_feature(X11_FOUND "X11" "X Window system" "http://www.x.org" TRUE "" "")
   find_library(XAW_LIBRARY NAMES Xaw Xaw7 PATHS ${OGRE_DEP_SEARCH_PATH} ${DEP_LIB_SEARCH_DIR} ${X11_LIB_SEARCH_PATH})
@@ -248,7 +248,7 @@ macro_log_feature(OPENGLES3_FOUND "OpenGL ES 3.x" "Support for the OpenGL ES 2.x
 if(WIN32)
 	find_package(DirectX)
 	macro_log_feature(DirectX9_FOUND "DirectX9" "Support for the DirectX render system" "http://msdn.microsoft.com/en-us/directx/" FALSE "" "")
-	
+
 	find_package(DirectX11)
 	macro_log_feature(DirectX11_FOUND "DirectX11" "Support for the DirectX11 render system" "http://msdn.microsoft.com/en-us/directx/" FALSE "" "")
 
@@ -285,7 +285,7 @@ if (APPLE AND APPLE_IOS)
 endif()
 
 if(ANDROID)
-    # FindBoost needs extra hint on android 
+    # FindBoost needs extra hint on android
     set(Boost_COMPILER -gcc)
 endif()
 

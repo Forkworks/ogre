@@ -42,7 +42,7 @@ if (APPLE AND NOT ANDROID)
   set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0")
   set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++11")
   set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
-  
+
   # otherwise apple defines a macro named check that conflicts with boost
   add_definitions(-D__ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES=0)
 endif ()
@@ -135,7 +135,7 @@ if (MSVC)
 	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /bigobj")
   endif ()
 
-  if (OGRE_PROJECT_FOLDERS)  
+  if (OGRE_PROJECT_FOLDERS)
     # Turn on the ability to create folders to organize projects (.vcproj)
     # It creates "CMakePredefinedTargets" folder by default and adds CMake
     # defined projects like INSTALL.vcproj and ZERO_CHECK.vcproj
@@ -182,7 +182,7 @@ add_compiler_export_flags(OGRE_VISIBILITY_FLAGS)
 if (OGRE_VISIBILITY_FLAGS)
     set(OGRE_VISIBILITY_FLAGS "-DOGRE_GCC_VISIBILITY ${OGRE_VISIBILITY_FLAGS}")
     set(XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
-    
+
     if(APPLE AND NOT APPLE_IOS)
       if(OGRE_VISIBILITY_FLAGS MATCHES -fvisibility-inlines-hidden)
         message(STATUS "Skipping -fvisibility-inlines-hidden due to linker issues")
@@ -233,6 +233,10 @@ set(OGRE_Terrain_LIBRARIES OgreTerrain)
 set(OGRE_Volume_LIBRARIES OgreVolume)
 set(OGRE_Plugin_PCZSceneManager_LIBRARIES Plugin_PCZSceneManager)
 set(OGRE_Plugin_OctreeZone_LIBRARIES Plugin_OctreeZone)
+
+if (UNIX)
+  set(EGLFS 1)
+endif (UNIX)
 
 # Specify build paths
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${OGRE_BINARY_DIR}/lib")
@@ -355,7 +359,7 @@ include(Dependencies)
 
 # Customise what to build
 option(OGRE_STATIC "Static build" FALSE)
-set(OGRE_RESOURCEMANAGER_STRICT "0" CACHE STRING 
+set(OGRE_RESOURCEMANAGER_STRICT "0" CACHE STRING
   "Make ResourceManager strict for faster operation. Possible values:
   0 - OFF search in all groups twice - for case sensitive and insensitive lookup [DEPRECATED]
   1 - PEDANTIC require an explicit resource group. Case sensitive lookup.

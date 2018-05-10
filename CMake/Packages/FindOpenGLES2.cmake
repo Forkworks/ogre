@@ -8,13 +8,13 @@
 #-------------------------------------------------------------------
 
 # - Try to find OpenGLES and EGL
-# If using ARM Mali emulation you can specify the parent directory that contains the bin and include directories by 
+# If using ARM Mali emulation you can specify the parent directory that contains the bin and include directories by
 # setting the MALI_SDK_ROOT variable in the environment.
 #
 # For AMD emulation use the AMD_SDK_ROOT variable
 #
 # Once done this will define
-#  
+#
 #  OPENGLES2_FOUND        - system has OpenGLES
 #  OPENGLES2_INCLUDE_DIR  - the GL include directory
 #  OPENGLES2_LIBRARIES    - Link these to use OpenGLES
@@ -125,7 +125,7 @@ ELSE (WIN32)
     )
 
     # On Unix OpenGL most certainly always requires X11.
-    # Feel free to tighten up these conditions if you don't 
+    # Feel free to tighten up these conditions if you don't
     # think this is always true.
     # It's not true on OSX.
 

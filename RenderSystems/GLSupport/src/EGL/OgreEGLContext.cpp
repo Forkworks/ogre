@@ -35,6 +35,8 @@ THE SOFTWARE.
 
 #include "OgreLogManager.h"
 
+#include <iostream>
+
 extern "C" {
 int gleswInit(void);
 }
@@ -57,6 +59,13 @@ namespace Ogre {
             shareContext = mainContext->mContext;
         }
 
+        std::cout << __FUNCTION__  << "Creating EGL context with parameters:" << '\n';
+        std::cout << "eglDisplay " << eglDisplay << '\n';
+        std::cout << "glsupport "  << glsupport  << '\n';
+        std::cout << "glconfig "   << glconfig   << '\n';
+        std::cout << "drawable "   << drawable   << '\n';
+
+
         _createInternalResources(eglDisplay, glconfig, drawable, shareContext);
     }
 
@@ -73,15 +82,15 @@ namespace Ogre {
 
         rs->_unregisterContext(this);
     }
-    
+
     void EGLContext::_createInternalResources(EGLDisplay eglDisplay, ::EGLConfig glconfig, ::EGLSurface drawable, ::EGLContext shareContext)
     {
         mDrawable = drawable;
         mConfig = glconfig;
         mEglDisplay = eglDisplay;
-        
+
         mContext = mGLSupport->createNewContext(mEglDisplay, mConfig, shareContext);
-        
+
         if (!mContext)
         {
             OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR,
@@ -91,7 +100,7 @@ namespace Ogre {
 
         setCurrent();
     }
-    
+
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
     void EGLContext::_updateInternalResources(EGLDisplay eglDisplay, ::EGLConfig glconfig, ::EGLSurface drawable)
     {
@@ -110,15 +119,20 @@ namespace Ogre {
     void EGLContext::_destroyInternalResources()
     {
         endCurrent();
-        
+
         eglDestroyContext(mEglDisplay, mContext);
         EGL_CHECK_ERROR
-        
+
         mContext = NULL;
     }
 
     void EGLContext::setCurrent()
     {
+        std::cout << __FUNCTION__ << " Setting EGL context as current..." << '\n';
+        std::cout << "mEglDisplay" << mEglDisplay << '\n';
+        std::cout << "mDrawable"   << mDrawable << '\n';
+        std::cout << "mContext"    << mContext << '\n';
+
         EGLBoolean ret = eglMakeCurrent(mEglDisplay,
                                         mDrawable, mDrawable, mContext);
         EGL_CHECK_ERROR

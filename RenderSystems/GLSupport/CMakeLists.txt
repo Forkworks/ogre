@@ -17,21 +17,21 @@ if(ANDROID)
   file(GLOB PLATFORM_HEADERS "include/EGL/Android/*.h" "include/EGL/*.h")
   file(GLOB PLATFORM_SOURCES "src/EGL/Android/*.cpp" "src/EGL/*.cpp")
 
-  set(NATIVE_INCLUDES 
-      ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL 
+  set(NATIVE_INCLUDES
+      ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL
       ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL/Android)
 elseif (EMSCRIPTEN)
   file(GLOB PLATFORM_HEADERS "include/EGL/Emscripten/*.h" "include/EGL/*.h")
   file(GLOB PLATFORM_SOURCES "src/EGL/Emscripten/*.cpp" "src/EGL/*.cpp")
 
-  set(NATIVE_INCLUDES 
-      ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL 
+  set(NATIVE_INCLUDES
+      ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL
       ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL/Emscripten)
 elseif (WIN32)
   if(OGRE_GLSUPPORT_USE_EGL)
       file(GLOB PLATFORM_HEADERS "include/EGL/WIN32/*.h" "include/EGL/*.h")
       file(GLOB PLATFORM_SOURCES "src/EGL/WIN32/*.cpp" "src/EGL/*.cpp")
-      
+
       set(NATIVE_INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL
         ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL/WIN32)
@@ -41,7 +41,7 @@ elseif (WIN32)
 
     set(NATIVE_INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/include/win32)
-        
+
     if(MINGW)
         set(PLATFORM_LIBS opengl32)
     endif()
@@ -53,32 +53,42 @@ elseif (APPLE)
   file(GLOB PLATFORM_SOURCES "src/OSX/*.mm")
 
   set(NATIVE_INCLUDES
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/OSX 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/OSX
     ${OGRE_SOURCE_DIR}/OgreMain/include/OSX)
   set(PLATFORM_LIBS ${Cocoa_LIBRARY_FWK})
 elseif (UNIX)
-  if(OGRE_GLSUPPORT_USE_EGL)
+  if (EGLFS)
+    file(GLOB PLATFORM_HEADERS "include/EGL/EGLFS/*.h" "include/EGL/*.h")
+    file(GLOB PLATFORM_SOURCES "src/EGL/EGLFS/*.cpp" "src/EGL/*.cpp")
+    include_directories(src/EGL/EGLFS include/EGL/EGLFS)
+    set(NATIVE_INCLUDES
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLES2/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLES2/src/GLSLES/include)
+    set(PLATFORM_HEADER_INSTALL "EGLFS")
+
+  elseif(OGRE_GLSUPPORT_USE_EGL)
     file(GLOB PLATFORM_HEADERS "include/EGL/X11/*.h" "include/EGL/*.h")
     file(GLOB PLATFORM_SOURCES "src/EGL/X11/*.cpp" "src/EGL/*.cpp")
-    
     set(NATIVE_INCLUDES
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL/X11)
+      ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL
+      ${CMAKE_CURRENT_SOURCE_DIR}/include/EGL/X11)
     set(PLATFORM_LIBS ${X11_LIBRARIES} ${X11_Xrandr_LIB} ${EGL_LIBRARIES})
+
   else()
     file(GLOB PLATFORM_HEADERS "include/GLX/*.h")
     file(GLOB PLATFORM_SOURCES "src/GLX/*.cpp")
-
     set(NATIVE_INCLUDES
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/GLX)
-    
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/GLX)
     set(PLATFORM_LIBS ${X11_LIBRARIES} ${X11_Xrandr_LIB} ${OPENGL_gl_LIBRARY})
-  endif()
-  
+
+endif()
+
   if(NOT OGRE_STATIC)
       add_definitions(-fPIC)
   endif()
-endif ()
+
+endif () # Platform choose
 
 file(GLOB GLSUPPORT_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
 set(GLSUPPORT_HEADERS ${GLSUPPORT_HEADERS} ${CMAKE_BINARY_DIR}/include/OgreGLSupportPrerequisites.h PARENT_SCOPE)
@@ -88,13 +98,13 @@ include_directories(${NATIVE_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR}/include/ ${CM
 file(GLOB GLSL_SOURCES src/GLSL/*.cpp)
 
 if(OGRE_CONFIG_ENABLE_GL_STATE_CACHE_SUPPORT)
-  set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/OgreGLUniformCache.cpp 
+  set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/OgreGLUniformCache.cpp
     PROPERTIES COMPILE_DEFINITIONS OGRE_ENABLE_STATE_CACHE)
 endif()
 
-ogre_add_library_to_folder(RenderSystems OgreGLSupport STATIC 
-    ${GLSUPPORT_HEADERS} ${PLATFORM_HEADERS} ${PLATFORM_SOURCES} ${GLSL_SOURCES} 
-    src/OgreGLRenderSystemCommon.cpp 
+ogre_add_library_to_folder(RenderSystems OgreGLSupport STATIC
+    ${GLSUPPORT_HEADERS} ${PLATFORM_HEADERS} ${PLATFORM_SOURCES} ${GLSL_SOURCES}
+    src/OgreGLRenderSystemCommon.cpp
     src/OgreGLTextureCommon.cpp
     src/OgreGLRenderTexture.cpp
     src/OgreGLHardwarePixelBufferCommon.cpp
@@ -102,7 +112,7 @@ ogre_add_library_to_folder(RenderSystems OgreGLSupport STATIC
     src/OgreGLVertexArrayObject.cpp
 )
 target_link_libraries(OgreGLSupport OgreMain ${PLATFORM_LIBS})
-generate_export_header(OgreGLSupport 
+generate_export_header(OgreGLSupport
     EXPORT_MACRO_NAME _OgreGLExport
     EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/include/OgreGLSupportPrerequisites.h)
 
@@ -112,4 +122,4 @@ endif()
 
 ogre_config_component(OgreGLSupport)
 
-set(GLSUPPORT_LIBS OgreGLSupport ${PLATFORM_LIBS} PARENT_SCOPE) 
+set(GLSUPPORT_LIBS OgreGLSupport ${PLATFORM_LIBS} PARENT_SCOPE)

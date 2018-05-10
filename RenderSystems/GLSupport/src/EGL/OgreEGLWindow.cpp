@@ -146,7 +146,7 @@ namespace Ogre {
         mVisible = visible;
     }
 
-  
+
 
     void EGLWindow::swapBuffers()
     {
@@ -154,6 +154,14 @@ namespace Ogre {
         {
             return;
         }
+
+        EGL_CHECK_ERROR
+
+        mEglSurface = eglGetCurrentSurface(EGL_DRAW);
+
+        //std::cout << __FUNCTION__  << " Swaping buffers between: " << '\n';
+        //std::cout << "mEglDisplay" << mEglDisplay  << '\n';
+        //std::cout << "mEglSurface" << mEglSurface  << '\n';
 
         if (eglSwapBuffers(mEglDisplay, mEglSurface) == EGL_FALSE)
         {
@@ -180,12 +188,12 @@ namespace Ogre {
         {
             *static_cast<EGLContext**>(pData) = mContext;
             return;
-        } 
+        }
         else if (name == "WINDOW")
         {
             *static_cast<NativeWindowType*>(pData) = mWindow;
             return;
-        } 
+        }
     }
 
     void EGLWindow::copyContentsToMemory(const Box& src, const PixelBox &dst, FrameBuffer buffer)

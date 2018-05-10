@@ -38,6 +38,7 @@ THE SOFTWARE.
 #include "OgreEGLWindow.h"
 #include "OgreEGLRenderTexture.h"
 
+#include <iostream>
 
 namespace Ogre {
 
@@ -47,6 +48,7 @@ namespace Ogre {
           mNativeDisplay(0),
       mRandr(false)
     {
+      std::cout << "Creating EGL support object..." << std::endl;
     }
 
     void EGLSupport::addConfig(void)
@@ -69,7 +71,7 @@ namespace Ogre {
         optVSync.name = "VSync";
         optVSync.possibleValues.push_back("No");
         optVSync.possibleValues.push_back("Yes");
-        optVSync.currentValue = optVSync.possibleValues[1];
+        optVSync.currentValue = optVSync.possibleValues[0];
         optVSync.immutable = false;
 
         optFSAA.name = "FSAA";
@@ -92,7 +94,8 @@ namespace Ogre {
 
         optVideoMode.currentValue = StringConverter::toString(mCurrentMode.first.first,4) + " x " + StringConverter::toString(mCurrentMode.first.second,4);
 
-        refreshConfig();
+        //refreshConfig();
+
         if (!mSampleLevels.empty())
         {
             StringVector::const_iterator sampleValue = mSampleLevels.begin();
@@ -107,18 +110,21 @@ namespace Ogre {
         }
 
         mOptions[optFullScreen.name] = optFullScreen;
-        mOptions[optVideoMode.name] = optVideoMode;
+        //mOptions[optVideoMode.name] = optVideoMode;
         mOptions[optDisplayFrequency.name] = optDisplayFrequency;
         mOptions[optFSAA.name] = optFSAA;
         mOptions[optVSync.name] = optVSync;
 
         refreshConfig();
+
     }
 
-    void EGLSupport::refreshConfig(void) 
+    void EGLSupport::refreshConfig(void)
     {
         ConfigOptionMap::iterator optVideoMode = mOptions.find("Video Mode");
         ConfigOptionMap::iterator optDisplayFrequency = mOptions.find("Display Frequency");
+
+        std::cout << __FUNCTION__ << "1"  << std::endl;
 
         if (optVideoMode != mOptions.end() && optDisplayFrequency != mOptions.end())
         {
@@ -440,8 +446,9 @@ namespace Ogre {
 
             if (pos != String::npos)
             {
-                w = StringConverter::parseUnsignedInt(val.substr(0, pos));
-                h = StringConverter::parseUnsignedInt(val.substr(pos + 1));
+                //Restore these lines!
+                //w = StringConverter::parseUnsignedInt(val.substr(0, pos));
+                //h = StringConverter::parseUnsignedInt(val.substr(pos + 1));
             }
         }
 
@@ -453,12 +460,13 @@ namespace Ogre {
         if((opt = mOptions.find("VSync")) != end)
             miscParams["vsync"] = opt->second.currentValue;
 
+        std::cout << __FUNCTION__ << w << "x" << h << '\n';
         return miscParams;
     }
 
     ::EGLContext EGLSupport::createNewContext(EGLDisplay eglDisplay,
                           ::EGLConfig glconfig,
-                                              ::EGLContext shareList) const 
+                                              ::EGLContext shareList) const
     {
         EGLint contextAttrs[] = {
             EGL_CONTEXT_CLIENT_VERSION, (OGRE_NO_GLES3_SUPPORT || OGRE_PLATFORM == OGRE_PLATFORM_EMSCRIPTEN) ? 2 : 3,

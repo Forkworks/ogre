@@ -69,6 +69,7 @@ void WindowEventUtilities::messagePump()
 
         (*win)->getCustomAttribute("WINDOW", &xid);
 
+        /*
         while (XCheckWindowEvent (xDisplay, xid, StructureNotifyMask | VisibilityChangeMask | FocusChangeMask, &event))
         {
         GLXProc(*win, event);
@@ -79,6 +80,8 @@ void WindowEventUtilities::messagePump()
         {
         GLXProc(*win, event);
         }
+        */
+
     }
 #elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE && !defined __OBJC__ && !defined __LP64__
     // OSX Message Pump

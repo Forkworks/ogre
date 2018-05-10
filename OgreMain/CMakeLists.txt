@@ -57,7 +57,7 @@ list(REMOVE_ITEM SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreFreeImageCode
 list(APPEND HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/Threading/OgreThreads.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/Threading/OgreBarrier.h
 	${CMAKE_CURRENT_SOURCE_DIR}/include/Threading/OgreLightweightMutex.h)
-	
+
 if(WIN32 AND NOT ANDROID)
 	list(APPEND SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/Threading/OgreBarrierWin.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Threading/OgreThreadsWin.cpp
@@ -103,7 +103,7 @@ elseif (WIN32)
       src/OgreConfigDialogNoOp.cpp
       src/WIN32/OgreFileSystemLayer.cpp
       src/WIN32/OgreTimer.cpp
-    )  
+    )
 
     set(PLATFORM_HEADER_INSTALL "WIN32")
   else ()
@@ -114,7 +114,7 @@ elseif (WIN32)
       include/WIN32/OgreMinGWSupport.h
       include/WIN32/OgreComPtr.h
     )
-    
+
     list(REMOVE_ITEM SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreErrorDialogNoOp.cpp")
     set(PLATFORM_SOURCE_FILES
       src/WIN32/OgreOptimisedUtilDirectXMath.cpp
@@ -123,7 +123,7 @@ elseif (WIN32)
       src/WIN32/OgreFileSystemLayer.cpp
       src/WIN32/OgreTimer.cpp
       src/WIN32/resource.h
-    )  
+    )
     set(RESOURCE_FILES
       src/WIN32/resource.h
       src/WIN32/OgreWin32Resources.rc
@@ -139,7 +139,7 @@ elseif (WIN32)
         message(SEND_ERROR "Could not find MinGW resource compiler. Please specify path in CMAKE_RC_COMPILER.")
       endif ()
       add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/OgreWin32Resources.rc.obj
-        COMMAND ${CMAKE_RC_COMPILER} -I${CMAKE_CURRENT_SOURCE_DIR}/src/WIN32 
+        COMMAND ${CMAKE_RC_COMPILER} -I${CMAKE_CURRENT_SOURCE_DIR}/src/WIN32
                                      -i${CMAKE_CURRENT_SOURCE_DIR}/src/WIN32/OgreWin32Resources.rc
                                      -o${CMAKE_CURRENT_BINARY_DIR}/OgreWin32Resources.rc.obj
         DEPENDS ${RESOURCE_FILES})
@@ -162,9 +162,9 @@ elseif (APPLE)
     set(PLATFORM_HEADER_INSTALL "iOS")
   else ()
     include_directories("include/OSX")
-    
+
     file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/OSX/*.h")
-    
+
     list(REMOVE_ITEM SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreErrorDialogNoOp.cpp")
     file(GLOB PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/OSX/*.cpp"
       "${CMAKE_CURRENT_SOURCE_DIR}/src/OSX/*.mm"
@@ -189,16 +189,28 @@ elseif(ANDROID)
       "${CMAKE_CURRENT_SOURCE_DIR}/src/OgrePOSIXTimer.cpp"
       "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreConfigDialogNoOp.cpp")
 
-  set(PLATFORM_HEADER_INSTALL "Android")
-elseif (UNIX)
-  include_directories(include/GLX ${X11_INCLUDE_DIR})
+      set(PLATFORM_HEADER_INSTALL "Android")
+    elseif (UNIX)
+      if(NOT EGLFS)
+        include_directories(include/GLX ${X11_INCLUDE_DIR})
+        file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/GLX/*.h")
+        file(GLOB PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/OgrePOSIXTimer.cpp")
+        set(PLATFORM_LIBS ${X11_LIBRARIES} ${X11_Xt_LIB} ${XAW_LIBRARY} pthread)
+        set(PLATFORM_HEADER_INSTALL "GLX")
+      else()
+        file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/EGLFS/*.h")
+        file(GLOB PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/EGLFS/*.cpp"
+        src/OgreSearchOps.cpp)
+        message("compiling for eglfs")
+        #file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreTimer.h"
+        #"${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/GLX_backdrop.h")
+        #file(GLOB PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/OgreFileSystemLayer.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/OgreTimer.cpp"
+        #src/OgreSearchOps.cpp "${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/OgreConfigDialog.cpp")
+        #set(PLATFORM_LIBS pthread)
+        #set(PLATFORM_HEADER_INSTALL "GLX")
+   endif()
 
-  file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/GLX/*.h")
-  file(GLOB PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/*.cpp"
-      "${CMAKE_CURRENT_SOURCE_DIR}/src/OgrePOSIXTimer.cpp")
-
-  set(PLATFORM_LIBS ${X11_LIBRARIES} ${X11_Xt_LIB} ${XAW_LIBRARY} pthread)
-  set(PLATFORM_HEADER_INSTALL "GLX")
   # some platforms require explicit linking to libdl, see if it's available
   find_library(DL_LIBRARY NAMES dl dlsym)
   mark_as_advanced(DL_LIBRARY)
@@ -284,11 +296,11 @@ endif()
 if (OGRE_CONFIG_ENABLE_STBI)
   list(APPEND HEADER_FILES include/OgreSTBICodec.h)
   list(APPEND SOURCE_FILES src/OgreSTBICodec.cpp)
-  
+
   if(UNIX)
     set_source_files_properties(src/OgreSTBICodec.cpp PROPERTIES COMPILE_FLAGS "-Wno-cast-qual -Wno-unused-function -Wno-shadow -Wno-missing-declarations")
   endif()
-  
+
   if(CMAKE_COMPILER_IS_GNUCXX)
       # workaround gcc5 bug on Ubuntu 16.04 regarding __builtin_cpu_supports
       list(APPEND LIBRARIES gcc)
@@ -347,7 +359,7 @@ else ()
 	ogre_add_library(OgreMain ${OGRE_LIB_TYPE} ${PREC_HEADER} ${HEADER_FILES} ${SOURCE_FILES} ${PLATFORM_HEADERS} ${PLATFORM_SOURCE_FILES} ${THREAD_HEADER_FILES} ${THREAD_SOURCE_FILES} SEPARATE "src/OgreAlignedAllocator.cpp")
 endif ()
 
-generate_export_header(OgreMain 
+generate_export_header(OgreMain
     EXPORT_MACRO_NAME _OgreExport
     NO_EXPORT_MACRO_NAME _OgrePrivate
     DEPRECATED_MACRO_NAME OGRE_DEPRECATED
@@ -355,7 +367,7 @@ generate_export_header(OgreMain
 
 # In visual studio 2010 - 64 bit we get this error: "LINK : fatal error LNK1210: exceeded internal ILK size limit; link with /INCREMENTAL:NO"
 if(WIN32 AND MSVC10 AND CMAKE_CL_64)
-  set_target_properties(OgreMain PROPERTIES 
+  set_target_properties(OgreMain PROPERTIES
                         VERSION ${OGRE_SOVERSION}
                         LINK_FLAGS "/INCREMENTAL:NO"
                       )
@@ -364,7 +376,7 @@ else()
 endif()
 
 if(OGRE_GCC_VERSION VERSION_EQUAL 4.8 OR OGRE_GCC_VERSION VERSION_GREATER 4.8)
-	if(CMAKE_SYSTEM_NAME STREQUAL "Android") 
+	if(CMAKE_SYSTEM_NAME STREQUAL "Android")
 	  list(APPEND LIBRARIES "atomic")
 	else()
 	  list(APPEND LIBRARIES "-latomic")
@@ -380,7 +392,7 @@ if (APPLE)
     )
 
     set(OGRE_OSX_BUILD_CONFIGURATION "$(PLATFORM_NAME)/$(CONFIGURATION)")
-  
+
     if(OGRE_BUILD_LIBS_AS_FRAMEWORKS)
       add_custom_command(TARGET OgreMain POST_BUILD
           COMMAND mkdir ARGS -p ${OGRE_BINARY_DIR}/lib/${OGRE_OSX_BUILD_CONFIGURATION}/Ogre.framework/Headers/Threading
@@ -424,7 +436,7 @@ if (MINGW)
 endif ()
 
 # specify a precompiled header to use
-use_precompiled_header(OgreMain 
+use_precompiled_header(OgreMain
   "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreStableHeaders.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/OgrePrecompiledHeaders.cpp"
 )

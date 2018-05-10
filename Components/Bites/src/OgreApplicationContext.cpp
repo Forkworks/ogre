@@ -16,11 +16,14 @@
 #include "OgreDataStream.h"
 #include "OgreBitesConfigDialog.h"
 
+#include <iostream>
+#include <cstdlib>
+
 #include "OgreConfigPaths.h"
 
 #if OGRE_BITES_HAVE_SDL
-#include <SDL_video.h>
-#include <SDL_syswm.h>
+#include <SDL2/SDL_video.h>
+#include <SDL2/SDL_syswm.h>
 #endif
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
@@ -300,6 +303,8 @@ void ApplicationContext::addInputListener(NativeWindowType* win, InputListener* 
 {
     uint32_t id = 0;
 #if OGRE_BITES_HAVE_SDL
+    //char *s = "SDL_VIDEODRIVER=dummy";
+    //putenv(s);
     id = SDL_GetWindowID(win);
 #endif
     mInputListeners.insert(std::make_pair(id, lis));
@@ -391,7 +396,7 @@ NativeWindowPair ApplicationContext::createWindow(const Ogre::String& name, Ogre
 #endif
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_LINUX
-    miscParams["parentWindowHandle"] = Ogre::StringConverter::toString(size_t(wmInfo.info.x11.window));
+    miscParams["parentWindowHandle"] = Ogre::StringConverter::toString("EGLNativeWindowType");
 #elif OGRE_PLATFORM == OGRE_PLATFORM_WIN32
     miscParams["externalWindowHandle"] = Ogre::StringConverter::toString(size_t(wmInfo.info.win.window));
 #elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE
@@ -496,6 +501,7 @@ void ApplicationContext::_fireInputEventAndroid(AInputEvent* event, int wheel) {
 
 void ApplicationContext::_fireInputEvent(const Event& event, uint32_t windowID) const
 {
+    std::cout << "FireInputEvent !!!" << '\n';
     for(InputListenerList::iterator it = mInputListeners.begin();
             it != mInputListeners.end(); ++it)
     {
@@ -786,13 +792,25 @@ void ApplicationContext::pollEvents()
 #if OGRE_BITES_HAVE_SDL
     if(mWindows.empty())
     {
+      std::cout << "Warning - mwindows empty!!" << '\n';
         // SDL events not initialized
         return;
     }
 
     SDL_Event event;
+    //char* s = "SDL_VIDEODRIVER=dummy";
+    //putenv(s);
+    //s = "SDL_MOUSEDEV=/dev/input/event2";
+    //putenv(s);
+
+    //SDL_Init(SDL_INIT_VIDEO);
+    if(SDL_PollEvent(&event) == 0) {
+      //std::cout << "@@" << SDL_GetError() << '\n';
+    }
+
     while (SDL_PollEvent(&event))
     {
+      std::cout << "while (SDL_PollEvent(&event))" << '\n';
         switch (event.type)
         {
         case SDL_QUIT:
@@ -814,6 +832,7 @@ void ApplicationContext::pollEvents()
             }
             break;
         default:
+            std::cout << "input event detected" << '\n';
             _fireInputEvent(event, event.window.windowID);
             break;
         }
