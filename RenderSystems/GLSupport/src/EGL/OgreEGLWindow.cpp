@@ -155,10 +155,7 @@ namespace Ogre {
             return;
         }
 
-        EGL_CHECK_ERROR
-
-        mEglSurface = eglGetCurrentSurface(EGL_DRAW);
-
+        //EGL_CHECK_ERROR
         //std::cout << __FUNCTION__  << " Swaping buffers between: " << '\n';
         //std::cout << "mEglDisplay" << mEglDisplay  << '\n';
         //std::cout << "mEglSurface" << mEglSurface  << '\n';
