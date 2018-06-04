@@ -1869,8 +1869,11 @@ namespace Ogre {
 
         // Setup GLSupport
         mGLSupport->initialiseExtensions();
+        //mStateCacheManager = mCurrentContext->createOrRetrieveStateCacheManager<GLES2StateCacheManager>();
 
-        mStateCacheManager = mCurrentContext->createOrRetrieveStateCacheManager<GLES2StateCacheManager>();
+        mStateCacheManager = OGRE_NEW GLES2StateCacheManager();
+        mStateCacheManager->initializeCache();
+
 
         if(hasMinGLVersion(3, 0)) {
             gl2ext_to_gl3core();
