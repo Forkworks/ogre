@@ -1848,11 +1848,11 @@ namespace Ogre {
         // Set main and current context
         mMainContext = 0;
         primary->getCustomAttribute("GLCONTEXT", &mMainContext);
-        mCurrentContext = mMainContext;
-
+        mCurrentContext = static_cast<EGLContext*>(eglGetCurrentContext());
+        mMainContext = mCurrentContext;
         // Set primary context as active
-        if (mCurrentContext)
-            mCurrentContext->setCurrent();
+        //if (mCurrentContext)
+        //    mCurrentContext->setCurrent();
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS || OGRE_PLATFORM == OGRE_PLATFORM_ANDROID || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
         // ios: EAGL2Support redirects to glesw for get_proc. Overwriting it there would create an infinite loop
@@ -1870,6 +1870,9 @@ namespace Ogre {
         // Setup GLSupport
         mGLSupport->initialiseExtensions();
         //mStateCacheManager = mCurrentContext->createOrRetrieveStateCacheManager<GLES2StateCacheManager>();
+
+        if(mStateCacheManager)
+          OGRE_DELETE mStateCacheManager;
 
         mStateCacheManager = OGRE_NEW GLES2StateCacheManager();
         mStateCacheManager->initializeCache();

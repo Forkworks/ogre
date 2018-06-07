@@ -39,14 +39,11 @@ THE SOFTWARE.
 #include "OgreEGLFSWindow.h"
 #include "OgreEGLFSContext.h"
 
-#include <iostream>
-
 namespace Ogre {
 
     EGLFSSupport::EGLFSSupport(int profile)
     : EGLSupport(profile)
     {
-      std::cout << "Creating EGLFS support object..." << std::endl;
         // A connection that might be shared with the application for GL rendering:
         //mGLDisplay = getGLDisplay();
 
@@ -62,7 +59,6 @@ namespace Ogre {
         }
 
        if (exists) {
-            std::cout << "EGLFS support object created with existing EGL display!" << std::endl;
             return;
           }
 
@@ -87,8 +83,6 @@ namespace Ogre {
         free(glConfigs);
 
         removeDuplicates(mSampleLevels);
-
-        std::cout << "EGLFS support object created!" << std::endl;
     }
 
     EGLFSSupport::~EGLFSSupport()
@@ -104,12 +98,12 @@ namespace Ogre {
                                         bool fullScreen,
                                         const NameValuePairList *miscParams)
     {
-        std::cout << "@@ EGLFSSupport::newWindow" << '\n';
-        std::cout << "name"   << name << '\n';
-        std::cout << "width"  << width << '\n';
-        std::cout << "height" << height << '\n';
+        //std::cout << "@@ EGLFSSupport::newWindow" << '\n';
+        //std::cout << "name"   << name << '\n';
+        //std::cout << "width"  << width << '\n';
+        //std::cout << "height" << height << '\n';
         EGLWindow* window = new EGLFSWindow(this);
-        window->create(name, 1366, 768, fullScreen, miscParams);
+        window->create(name, width, height, fullScreen, miscParams);
 
         return window;
     }

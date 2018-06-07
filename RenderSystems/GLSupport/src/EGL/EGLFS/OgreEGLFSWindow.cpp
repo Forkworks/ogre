@@ -70,12 +70,11 @@ namespace Ogre {
 
   EGLContext * EGLFSWindow::createEGLContext()
   {
-    std::cout << __FUNCTION__ << " Requesting EGL context" << '\n';
-
-    std::cout << "mEglDisplay " << mEglDisplay << '\n';
-    std::cout << "mGLSupport "  << mGLSupport << '\n';
-    std::cout << "mEglConfig "  << mEglConfig << '\n';
-    std::cout << "mEglSurface " << mEglSurface << '\n';
+    //std::cout << __FUNCTION__ << " Requesting EGL context" << '\n';
+    //std::cout << "mEglDisplay " << mEglDisplay << '\n';
+    //std::cout << "mGLSupport "  << mGLSupport << '\n';
+    //std::cout << "mEglConfig "  << mEglConfig << '\n';
+    //std::cout << "mEglSurface " << mEglSurface << '\n';
 
     return new EGLFSContext(mEglDisplay, mGLSupport, mEglConfig, mEglSurface);
   }

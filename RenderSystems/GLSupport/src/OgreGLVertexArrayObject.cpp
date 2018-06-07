@@ -46,6 +46,8 @@ namespace Ogre {
     
     void GLVertexArrayObject::bind(GLRenderSystemCommon* rs)
     {
+      //Original function implementation generates memory leak. Vao's were created but never destroyed.
+      /*
         if(mCreatorContext && mCreatorContext != rs->_getCurrentContext()) // VAO is unusable with current context, destroy it
         {
             if(mVAO != 0)
@@ -54,9 +56,13 @@ namespace Ogre {
             mVAO = 0;
             mNeedsUpdate = true;
         }
+        */
         if(!mCreatorContext && rs->getCapabilities()->hasCapability(RSC_VAO)) // create VAO lazy or recreate after destruction
         {
-            mCreatorContext = rs->_getCurrentContext();
+          mCreatorContext = rs->_getCurrentContext();
+          if(mVAO != 0)
+              rs->_destroyVao(mCreatorContext, mVAO);
+
             mVAO = rs->_createVao();
             mNeedsUpdate = true;
         }

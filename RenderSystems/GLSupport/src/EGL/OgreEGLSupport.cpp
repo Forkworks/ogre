@@ -94,7 +94,7 @@ namespace Ogre {
 
         optVideoMode.currentValue = StringConverter::toString(mCurrentMode.first.first,4) + " x " + StringConverter::toString(mCurrentMode.first.second,4);
 
-        //refreshConfig();
+        refreshConfig();
 
         if (!mSampleLevels.empty())
         {
@@ -110,7 +110,7 @@ namespace Ogre {
         }
 
         mOptions[optFullScreen.name] = optFullScreen;
-        //mOptions[optVideoMode.name] = optVideoMode;
+        mOptions[optVideoMode.name] = optVideoMode;
         mOptions[optDisplayFrequency.name] = optDisplayFrequency;
         mOptions[optFSAA.name] = optFSAA;
         mOptions[optVSync.name] = optVSync;
@@ -145,6 +145,7 @@ namespace Ogre {
                 }
             }
 
+            /*
             if (!optDisplayFrequency->second.possibleValues.empty())
             {
                 optDisplayFrequency->second.currentValue = optDisplayFrequency->second.possibleValues[0];
@@ -154,6 +155,7 @@ namespace Ogre {
                 optVideoMode->second.currentValue = StringConverter::toString(mVideoModes[0].first.first,4) + " x " + StringConverter::toString(mVideoModes[0].first.second,4);
                 optDisplayFrequency->second.currentValue = StringConverter::toString(mVideoModes[0].second) + " MHz";
             }
+            */
         }
     }
 
@@ -446,9 +448,8 @@ namespace Ogre {
 
             if (pos != String::npos)
             {
-                //Restore these lines!
-                //w = StringConverter::parseUnsignedInt(val.substr(0, pos));
-                //h = StringConverter::parseUnsignedInt(val.substr(pos + 1));
+                w = StringConverter::parseUnsignedInt(val.substr(0, pos));
+                h = StringConverter::parseUnsignedInt(val.substr(pos + 1));
             }
         }
 
