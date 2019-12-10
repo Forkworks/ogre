@@ -34,6 +34,7 @@ THE SOFTWARE.
 #include "OgreRoot.h"
 #include "OgreGLES2RenderSystem.h"
 #include "OgreGLES2Support.h"
+#include <iostream>
 
 namespace Ogre {
 
@@ -308,6 +309,7 @@ namespace Ogre {
         GLContext* currentContext = rs->_getCurrentContext();
         if(mContext && mContext != currentContext) // FBO is unusable with current context, destroy it
         {
+            std::cout << "**** mContext && mContext != currentContext ****" << std::endl;
             if(mFB != 0)
                 rs->_destroyFbo(mContext, mFB);
             if(mMultisampleFB != 0)
@@ -324,6 +326,10 @@ namespace Ogre {
             
             // Generate framebuffer object
             OGRE_CHECK_GL_ERROR(glGenFramebuffers(1, &mFB));
+            std::cout << __PRETTY_FUNCTION__ << std::endl;
+            std::cout << mFB << std::endl;
+            std::cout << mContext << std::endl;
+
 #ifdef DEBUG
             if(Root::getSingleton().getRenderSystem()->getCapabilities()->hasCapability(RSC_DEBUG))
             {

@@ -39,6 +39,8 @@ THE SOFTWARE.
 #include "OgreEGLFSWindow.h"
 #include "OgreEGLFSContext.h"
 
+#include <iostream>
+
 namespace Ogre {
 
     EGLFSSupport::EGLFSSupport(int profile)
@@ -98,10 +100,10 @@ namespace Ogre {
                                         bool fullScreen,
                                         const NameValuePairList *miscParams)
     {
-        //std::cout << "@@ EGLFSSupport::newWindow" << '\n';
-        //std::cout << "name"   << name << '\n';
-        //std::cout << "width"  << width << '\n';
-        //std::cout << "height" << height << '\n';
+        std::cout << "@@ EGLFSSupport::newWindow" << '\n';
+        std::cout << "name"   << name << '\n';
+        std::cout << "width"  << width << '\n';
+        std::cout << "height" << height << '\n';
         EGLWindow* window = new EGLFSWindow(this);
         window->create(name, width, height, fullScreen, miscParams);
 

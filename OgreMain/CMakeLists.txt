@@ -202,6 +202,7 @@ elseif(ANDROID)
         file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/EGLFS/*.h")
         file(GLOB PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/EGLFS/*.cpp"
         src/OgreSearchOps.cpp)
+	set(PLATFORM_LIBS EGL)
         message("compiling for eglfs")
         #file(GLOB PLATFORM_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreTimer.h"
         #"${CMAKE_CURRENT_SOURCE_DIR}/src/GLX/GLX_backdrop.h")

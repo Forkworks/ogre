@@ -711,6 +711,9 @@ namespace Ogre {
             win->attachDepthBuffer( depthBuffer );
         }
 
+         std::cout << "**** WILL CHECK FOR EGL ERRORS ***" << std::endl;
+         EGL_CHECK_ERROR
+
         return win;
     }
 
@@ -1714,6 +1717,8 @@ namespace Ogre {
 
     void GLES2RenderSystem::_switchContext(GLContext *context)
     {
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+
         // Unbind GPU programs and rebind to new context later, because
         // scene manager treat render system as ONE 'context' ONLY, and it
         // cached the GPU programs using state.
@@ -1733,7 +1738,9 @@ namespace Ogre {
             // see https://developer.apple.com/library/content/qa/qa1612/_index.html
             glFlush();
 #endif
-            mCurrentContext->endCurrent();
+            if(mCurrentContext)
+                mCurrentContext->endCurrent();
+
             mCurrentContext = context;
         }
         mCurrentContext->setCurrent();
@@ -1845,11 +1852,14 @@ namespace Ogre {
 
     void GLES2RenderSystem::initialiseContext(RenderWindow* primary)
     {
+        std::cout << __PRETTY_FUNCTION__ << std::endl;        
         // Set main and current context
         mMainContext = 0;
         primary->getCustomAttribute("GLCONTEXT", &mMainContext);
-        mCurrentContext = static_cast<EGLContext*>(eglGetCurrentContext());
-        mMainContext = mCurrentContext;
+        mCurrentContext = mMainContext;
+        std::cout << mMainContext << std::endl;
+        //mCurrentContext = static_cast<EGLContext*>(eglGetCurrentContext());
+        //mMainContext = mCurrentContext;
         // Set primary context as active
         //if (mCurrentContext)
         //    mCurrentContext->setCurrent();

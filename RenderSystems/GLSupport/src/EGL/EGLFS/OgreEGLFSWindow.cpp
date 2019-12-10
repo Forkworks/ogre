@@ -40,7 +40,7 @@ THE SOFTWARE.
 #include "OgreEGLFSContext.h"
 #include "EGL/eglplatform.h"
 
-#include <gbm.h>
+//#include <gbm.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -70,11 +70,11 @@ namespace Ogre {
 
   EGLContext * EGLFSWindow::createEGLContext()
   {
-    //std::cout << __FUNCTION__ << " Requesting EGL context" << '\n';
-    //std::cout << "mEglDisplay " << mEglDisplay << '\n';
-    //std::cout << "mGLSupport "  << mGLSupport << '\n';
-    //std::cout << "mEglConfig "  << mEglConfig << '\n';
-    //std::cout << "mEglSurface " << mEglSurface << '\n';
+    std::cout << __FUNCTION__ << " Requesting EGL context" << '\n';
+    std::cout << "mEglDisplay " << mEglDisplay << '\n';
+    std::cout << "mGLSupport "  << mGLSupport << '\n';
+    std::cout << "mEglConfig "  << mEglConfig << '\n';
+    std::cout << "mEglSurface " << mEglSurface << '\n';
 
     return new EGLFSContext(mEglDisplay, mGLSupport, mEglConfig, mEglSurface);
   }
@@ -149,16 +149,17 @@ namespace Ogre {
 
     void EGLFSWindow::createNativeWindow( int &left, int &top, uint &width, uint &height, String &title )
     {
-
-      mEglDisplay = mGLSupport->getGLDisplay();//todo
+      mEglDisplay = mGLSupport->getGLDisplay();
+      eglInitialize( mEglDisplay, nullptr, nullptr );
 
       left = top = 0;
 
-      struct gbm_surface* gbm;
-      mWindow = gbm;
+      mWindow  = NULL;//fbCreateWindow(int(fbGetDisplayByIndex(0)), NULL, NULL, width, height);
+      mEglSurface = createSurfaceFromWindow(mEglDisplay, mWindow);
 
-      mEglSurface = createSurfaceFromWindow(mGLSupport->getGLDisplay(), mWindow);
 
+      //mEglDisplay = mGLSupport->getGLDisplay();
+      //mEglSurface = createSurfaceFromWindow(mEglDisplay, mWindow);
       EGL_CHECK_ERROR
 
       if (mIsFullScreen)
@@ -296,6 +297,8 @@ namespace Ogre {
 
               mIsExternal = (mEglSurface != 0);
 
+              std::cout << __FUNCTION__ << "mIsExternal"  << mIsExternal << '\n';
+
               if (!mEglConfig)
               {
                 int minAttribs[] = {
@@ -337,12 +340,17 @@ namespace Ogre {
                 mGLSupport->switchMode (width, height, frequency);
               }
 
+              //eglBindAPI( EGL_OPENGL_ES_API );
+
               if (!mIsExternal)
               {
                 createNativeWindow(left, top, width, height, title);
               }
 
-              //mContext = createEGLContext();
+              mContext = createEGLContext();
+              //mContext->setCurrent();
+              EGL_CHECK_ERROR
+
               if (!mIsExternalGLControl) {
                 mContext = createEGLContext();
 
@@ -368,6 +376,10 @@ namespace Ogre {
               mVisible = true;
 
               mClosed = false;
+
+              EGL_CHECK_ERROR
+              std::cout << __FUNCTION__ << "EGLFS window created!" << '\n';
+
             }
 
           }

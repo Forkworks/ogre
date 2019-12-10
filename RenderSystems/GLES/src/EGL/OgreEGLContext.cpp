@@ -33,6 +33,9 @@ THE SOFTWARE.
 
 #include "OgreRoot.h"
 
+
+#include <iostream>
+
 namespace Ogre {
     EGLContext::EGLContext(EGLDisplay eglDisplay,
                             const EGLSupport* glsupport,
@@ -94,6 +97,10 @@ namespace Ogre {
     
     void EGLContext::setCurrent()
     {
+        std::cout << __FUNCTION__ << " Setting EGL context as current..." << '\n';
+        std::cout << "mEglDisplay" << mEglDisplay << '\n';
+        std::cout << "mDrawable"   << mDrawable << '\n';
+        std::cout << "mContext"    << mContext << '\n';
         EGLBoolean ret = eglMakeCurrent(mEglDisplay,
                                         mDrawable, mDrawable, mContext);
         if (!ret)

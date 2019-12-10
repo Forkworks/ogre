@@ -66,6 +66,7 @@ elseif (UNIX)
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLES2/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLES2/src/GLSLES/include)
     set(PLATFORM_HEADER_INSTALL "EGLFS")
+    set(PLATFORM_LIBS EGL)
 
   elseif(OGRE_GLSUPPORT_USE_EGL)
     file(GLOB PLATFORM_HEADERS "include/EGL/X11/*.h" "include/EGL/*.h")
